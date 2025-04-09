@@ -1,0 +1,457 @@
+2025-04-09 02:03:49 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 02:03:50 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 02:03:50 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 02:03:58 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 02:03:58 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 02:03:58 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 02:03:58 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 02:03:58 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 02:05:44 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 02:05:44 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 02:05:44 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 02:05:46 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 02:05:46 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 02:05:46 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 02:05:46 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 02:05:46 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 02:06:50 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 02:06:50 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 02:06:50 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 02:06:52 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 02:06:52 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 02:06:52 [INFO] main: 為替データの取得: USD/JPY, 1d, 30日間
+2025-04-09 02:07:06 [ERROR] data.data_fetcher: 為替レートの保存エラー: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(psycopg2.errors.InvalidSchemaName) スキーマ"np"は存在しません
+LINE 1: ...UES ('USD/JPY', '2025-03-10T00:00:00'::timestamp, np.float64...
+                                                             ^
+
+[SQL: INSERT INTO currency_rates (symbol, timestamp, open, high, low, close, volume, timeframe, source, created_at) VALUES (%(symbol)s, %(timestamp)s, %(open)s, %(high)s, %(low)s, %(close)s, %(volume)s, %(timeframe)s, %(source)s, %(created_at)s) RETURNING currency_rates.id]
+[parameters: {'symbol': 'USD/JPY', 'timestamp': Timestamp('2025-03-10 00:00:00'), 'open': np.float64(147.069), 'high': np.float64(148.114), 'low': np.float64(146.547), 'close': np.float64(147.069), 'volume': np.float64(0.0), 'timeframe': '1d', 'source': 'alpha_vantage', 'created_at': datetime.datetime(2025, 4, 8, 17, 7, 6, 309189)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.InvalidSchemaName: スキーマ"np"は存在しません
+LINE 1: ...UES ('USD/JPY', '2025-03-10T00:00:00'::timestamp, np.float64...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\data\data_fetcher.py", line 233, in _save_rates_to_db
+    ).first()
+      ~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2759, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2230, in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        False,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 577, in orm_pre_session_exec
+    session._autoflush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3065, in _autoflush
+    raise e.with_traceback(sys.exc_info()[2])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3054, in _autoflush
+    self.flush()
+    ~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        insert,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+        statement,
+        params,
+        execution_options=execution_options,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(psycopg2.errors.InvalidSchemaName) スキーマ"np"は存在しません
+LINE 1: ...UES ('USD/JPY', '2025-03-10T00:00:00'::timestamp, np.float64...
+                                                             ^
+
+[SQL: INSERT INTO currency_rates (symbol, timestamp, open, high, low, close, volume, timeframe, source, created_at) VALUES (%(symbol)s, %(timestamp)s, %(open)s, %(high)s, %(low)s, %(close)s, %(volume)s, %(timeframe)s, %(source)s, %(created_at)s) RETURNING currency_rates.id]
+[parameters: {'symbol': 'USD/JPY', 'timestamp': Timestamp('2025-03-10 00:00:00'), 'open': np.float64(147.069), 'high': np.float64(148.114), 'low': np.float64(146.547), 'close': np.float64(147.069), 'volume': np.float64(0.0), 'timeframe': '1d', 'source': 'alpha_vantage', 'created_at': datetime.datetime(2025, 4, 8, 17, 7, 6, 309189)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-04-09 02:07:06 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1d
+2025-04-09 02:07:06 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 02:07:06 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 02:07:06 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 02:07:12 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 02:07:12 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 02:07:12 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 02:07:14 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 02:07:14 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 02:07:14 [INFO] main: 為替データの取得: USD/JPY, 1d, 30日間
+2025-04-09 02:07:28 [ERROR] data.data_fetcher: 為替レートの保存エラー: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(psycopg2.errors.InvalidSchemaName) スキーマ"np"は存在しません
+LINE 1: ...UES ('USD/JPY', '2025-03-10T00:00:00'::timestamp, np.float64...
+                                                             ^
+
+[SQL: INSERT INTO currency_rates (symbol, timestamp, open, high, low, close, volume, timeframe, source, created_at) VALUES (%(symbol)s, %(timestamp)s, %(open)s, %(high)s, %(low)s, %(close)s, %(volume)s, %(timeframe)s, %(source)s, %(created_at)s) RETURNING currency_rates.id]
+[parameters: {'symbol': 'USD/JPY', 'timestamp': Timestamp('2025-03-10 00:00:00'), 'open': np.float64(147.069), 'high': np.float64(148.114), 'low': np.float64(146.547), 'close': np.float64(147.069), 'volume': np.float64(0.0), 'timeframe': '1d', 'source': 'alpha_vantage', 'created_at': datetime.datetime(2025, 4, 8, 17, 7, 28, 703600)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.InvalidSchemaName: スキーマ"np"は存在しません
+LINE 1: ...UES ('USD/JPY', '2025-03-10T00:00:00'::timestamp, np.float64...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\data\data_fetcher.py", line 233, in _save_rates_to_db
+    ).first()
+      ~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2759, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2230, in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        False,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 577, in orm_pre_session_exec
+    session._autoflush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3065, in _autoflush
+    raise e.with_traceback(sys.exc_info()[2])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 3054, in _autoflush
+    self.flush()
+    ~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        insert,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+        statement,
+        params,
+        execution_options=execution_options,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(psycopg2.errors.InvalidSchemaName) スキーマ"np"は存在しません
+LINE 1: ...UES ('USD/JPY', '2025-03-10T00:00:00'::timestamp, np.float64...
+                                                             ^
+
+[SQL: INSERT INTO currency_rates (symbol, timestamp, open, high, low, close, volume, timeframe, source, created_at) VALUES (%(symbol)s, %(timestamp)s, %(open)s, %(high)s, %(low)s, %(close)s, %(volume)s, %(timeframe)s, %(source)s, %(created_at)s) RETURNING currency_rates.id]
+[parameters: {'symbol': 'USD/JPY', 'timestamp': Timestamp('2025-03-10 00:00:00'), 'open': np.float64(147.069), 'high': np.float64(148.114), 'low': np.float64(146.547), 'close': np.float64(147.069), 'volume': np.float64(0.0), 'timeframe': '1d', 'source': 'alpha_vantage', 'created_at': datetime.datetime(2025, 4, 8, 17, 7, 28, 703600)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-04-09 02:07:28 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1d
+2025-04-09 02:07:28 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 02:07:28 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 02:07:28 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 02:07:40 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 02:07:40 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 02:07:40 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 02:07:42 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 02:07:42 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 02:07:42 [INFO] main: 為替データの取得: USD/JPY, 1d, 30日間
+2025-04-09 02:07:56 [INFO] data.data_fetcher: 22件の為替レートをデータベースに保存しました
+2025-04-09 02:07:56 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1d
+2025-04-09 02:07:56 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 02:07:56 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 02:07:56 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 02:08:34 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 02:08:34 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 02:08:34 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 02:08:37 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 02:08:37 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 02:08:37 [INFO] main: ニュースデータの取得: ['USD/JPY', 'forex', 'dollar', 'yen'], 7日間
+2025-04-09 02:08:39 [INFO] data.data_fetcher: 99件のニュース記事を取得しました
+2025-04-09 02:08:39 [ERROR] data.data_fetcher: ニュース記事の保存エラー: argument of type 'NoneType' is not iterable
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\data\data_fetcher.py", line 396, in _save_news_to_db
+    keyword in article.get("description", ""),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'NoneType' is not iterable
+2025-04-09 02:08:39 [INFO] main: 99件のニュースデータを取得しました
+2025-04-09 02:08:40 [INFO] models.sentiment_model: 0件のセンチメントスコアをデータベースに保存しました
+2025-04-09 02:08:40 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 02:08:40 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 02:08:40 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 02:09:04 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 02:09:04 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 02:09:04 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 02:09:07 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 02:09:07 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 02:09:07 [INFO] main: ニュースデータの取得: ['USD/JPY', 'forex'], 5日間
+2025-04-09 02:09:09 [INFO] data.data_fetcher: 100件のニュース記事を取得しました
+2025-04-09 02:09:09 [INFO] data.data_fetcher: 100件のニュース記事をデータベースに保存しました
+2025-04-09 02:09:09 [INFO] main: 100件のニュースデータを取得しました
+2025-04-09 02:09:10 [INFO] models.sentiment_model: 0件のセンチメントスコアをデータベースに保存しました
+2025-04-09 02:09:10 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 02:09:10 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 02:09:10 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 02:09:34 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 02:09:34 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 02:09:34 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 02:09:36 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 02:09:36 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 02:09:36 [INFO] main: 為替データの取得: USD/JPY, 1h, 30日間
+2025-04-09 02:09:49 [WARNING] data.data_fetcher: 為替レート時系列データが取得できませんでした: {'Information': 'Thank you for using Alpha Vantage! This is a premium endpoint. You may subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly unlock all premium endpoints'}
+2025-04-09 02:09:49 [WARNING] main: 為替データが取得できませんでした: USD/JPY, 1h
+2025-04-09 02:09:49 [INFO] main: 為替データの取得: USD/JPY, 1h, 7日間
+2025-04-09 02:10:01 [WARNING] data.data_fetcher: 為替レート時系列データが取得できませんでした: {'Information': 'Thank you for using Alpha Vantage! This is a premium endpoint. You may subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly unlock all premium endpoints'}
+2025-04-09 02:10:01 [WARNING] main: 為替データが取得できませんでした: USD/JPY, 1h
+2025-04-09 02:10:01 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 02:10:01 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 02:10:01 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 16:49:55 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 16:49:55 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 16:49:55 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 16:49:58 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 16:49:58 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 16:49:58 [INFO] main: 為替データの取得: USD/JPY, 1d, 30日間
+2025-04-09 16:50:12 [INFO] data.data_fetcher: 1件の為替レートをデータベースに保存しました
+2025-04-09 16:50:12 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1d
+2025-04-09 16:50:12 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 16:50:12 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 16:50:12 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 16:51:16 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 16:51:16 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 16:51:16 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 16:51:19 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 16:51:19 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 16:51:19 [INFO] main: 為替データの取得: USD/JPY, 1d, 365日間
+2025-04-09 16:51:33 [INFO] data.data_fetcher: 237件の為替レートをデータベースに保存しました
+2025-04-09 16:51:33 [INFO] main: 260件の為替データを取得しました: USD/JPY, 1d
+2025-04-09 16:51:33 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 16:51:33 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 16:51:33 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-09 16:51:44 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-09 16:51:44 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-09 16:51:44 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-09 16:51:47 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-09 16:51:47 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-09 16:51:47 [INFO] main: 為替データの取得: USD/JPY, 1d, 365日間
+2025-04-09 16:52:01 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-09 16:52:01 [INFO] main: 260件の為替データを取得しました: USD/JPY, 1d
+2025-04-09 16:52:01 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-09 16:52:01 [INFO] utils.database: データベース接続をクローズしました
+2025-04-09 16:52:01 [INFO] main: FX学習エージェントをシャットダウンしました

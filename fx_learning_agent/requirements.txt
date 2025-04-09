@@ -1,0 +1,27 @@
+# 基本ライブラリ
+numpy>=1.20.0
+pandas>=1.3.0
+matplotlib>=3.4.0
+python-dotenv>=0.19.0
+tqdm>=4.62.0
+
+# データベース
+sqlalchemy>=1.4.0
+psycopg2-binary>=2.9.0  # PostgreSQL接続
+alembic>=1.7.0  # データベースマイグレーション
+
+# API
+requests>=2.26.0
+newsapi-python>=0.2.6  # NewsAPI用クライアント
+
+# 機械学習
+scikit-learn>=1.0.0
+tensorflow>=2.7.0  # LSTMモデル用
+transformers>=4.12.0  # BERT感情分析用
+torch>=1.10.0  # PyTorch（transformers用）
+joblib>=1.1.0  # モデル保存
+nltk>=3.6.0  # 自然言語処理
+
+# 視覚化
+seaborn>=0.11.0
+plotly>=5.3.0 
