@@ -455,3 +455,1616 @@ TypeError: argument of type 'NoneType' is not iterable
 2025-04-09 16:52:01 [INFO] main: FX学習エージェントをシャットダウンしています...
 2025-04-09 16:52:01 [INFO] utils.database: データベース接続をクローズしました
 2025-04-09 16:52:01 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 20:52:23 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 20:52:23 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 20:52:24 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 20:52:27 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 20:52:27 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 20:52:27 [INFO] main: 為替データの取得: USD/JPY, 1d, 365日間
+2025-04-15 20:52:41 [INFO] data.data_fetcher: 56件の為替レートをデータベースに保存しました
+2025-04-15 20:52:41 [INFO] main: 261件の為替データを取得しました: USD/JPY, 1d
+2025-04-15 20:52:41 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 20:52:41 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 20:52:41 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 20:53:32 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 20:53:33 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 20:53:33 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 20:53:35 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 20:53:35 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 20:53:35 [INFO] main: ニュースデータの取得: ['USD/JPY', 'USD', 'JPY', 'forex'], 365日間
+2025-04-15 20:53:36 [ERROR] data.data_fetcher: ニュース取得エラー: {'status': 'error', 'code': 'parameterInvalid', 'message': 'You are trying to request results too far in the past. Your plan permits you to request articles as far back as 2025-03-14, but you have requested 2024-04-15. You may need to upgrade to a paid plan.'}
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\data\data_fetcher.py", line 382, in fetch_news
+    response = self.news_api.get_everything(
+        q=query,
+    ...<4 lines>...
+        page_size=100
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\newsapi\newsapi_client.py", line 334, in get_everything
+    raise NewsAPIException(r.json())
+newsapi.newsapi_exception.NewsAPIException: {'status': 'error', 'code': 'parameterInvalid', 'message': 'You are trying to request results too far in the past. Your plan permits you to request articles as far back as 2025-03-14, but you have requested 2024-04-15. You may need to upgrade to a paid plan.'}
+2025-04-15 20:53:36 [WARNING] main: ニュースデータが取得できませんでした: ['USD/JPY', 'USD', 'JPY', 'forex']
+2025-04-15 20:53:36 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 20:53:36 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 20:53:36 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:08:07 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:08:07 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:08:07 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:08:09 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:08:09 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:08:09 [INFO] main: 為替データの取得: USD/JPY, 1h, 30日間
+2025-04-15 21:08:09 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:08:23 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:08:23 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:08:23 [INFO] main: 為替データの取得: USD/JPY, 1h, 7日間
+2025-04-15 21:08:23 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:08:36 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:08:36 [INFO] main: 5件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:08:36 [ERROR] main: サポートされていないモデルタイプ: lstm
+2025-04-15 21:08:36 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:08:36 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:08:36 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:08:50 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:08:50 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:08:50 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:08:52 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:08:52 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:08:52 [INFO] main: 為替データの取得: USD/JPY, 1h, 30日間
+2025-04-15 21:08:52 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:09:06 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:09:06 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:09:06 [INFO] main: 為替データの取得: USD/JPY, 1h, 7日間
+2025-04-15 21:09:06 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:09:19 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:09:19 [INFO] main: 5件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:09:19 [ERROR] main: モデル学習エラー: tuple index out of range
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 282, in train
+    self._build_model(input_shape=(X_train.shape[1], X_train.shape[2]))
+                                   ~~~~~~~~~~~~~^^^
+IndexError: tuple index out of range
+2025-04-15 21:09:19 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:09:19 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:09:19 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:09:25 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:09:25 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:09:25 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:09:27 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:09:27 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:09:27 [INFO] main: ニュースデータの取得: ['USD/JPY', 'forex'], 30日間
+2025-04-15 21:09:29 [INFO] data.data_fetcher: 100件のニュース記事を取得しました
+2025-04-15 21:09:29 [INFO] data.data_fetcher: 87件のニュース記事をデータベースに保存しました
+2025-04-15 21:09:29 [INFO] main: 100件のニュースデータを取得しました
+2025-04-15 21:09:31 [INFO] models.sentiment_model: 0件のセンチメントスコアをデータベースに保存しました
+2025-04-15 21:09:31 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:09:31 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:09:31 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:10:25 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:10:25 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:10:25 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:10:27 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:10:27 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:10:27 [INFO] main: 進化的学習の開始: USD/JPY, LSTM, 世代数=10, 集団サイズ=5
+2025-04-15 21:10:27 [INFO] main: 為替データの取得: USD/JPY, 1h, 60日間
+2025-04-15 21:10:27 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:10:40 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:10:40 [INFO] main: 42件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:10:40 [INFO] main: 為替データの取得: USD/JPY, 1h, 10日間
+2025-04-15 21:10:40 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:10:53 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:10:53 [INFO] main: 7件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:10:53 [INFO] models.evolution: 初期集団生成: 20個のLSTMモデルを作成します
+2025-04-15 21:10:53 [INFO] main: 世代 1/10 の学習開始
+2025-04-15 21:11:07 [ERROR] main: 進化的学習エラー: Can't get local object 'create_engine.<locals>.connect'
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "C:\Python313\Lib\multiprocessing\queues.py", line 262, in _feed
+    obj = _ForkingPickler.dumps(obj)
+  File "C:\Python313\Lib\multiprocessing\reduction.py", line 51, in dumps
+    cls(buf, protocol).dump(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+AttributeError: Can't get local object 'create_engine.<locals>.connect'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 343, in run_evolution
+    train_results.append(future.result())
+                         ~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Python313\Lib\multiprocessing\queues.py", line 262, in _feed
+    obj = _ForkingPickler.dumps(obj)
+  File "C:\Python313\Lib\multiprocessing\reduction.py", line 51, in dumps
+    cls(buf, protocol).dump(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+AttributeError: Can't get local object 'create_engine.<locals>.connect'
+2025-04-15 21:11:07 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:11:07 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:11:07 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:11:13 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:11:13 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:11:13 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:11:15 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:11:15 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:11:15 [INFO] main: 為替データの取得: USD/JPY, 1d, 365日間
+2025-04-15 21:11:30 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:11:30 [INFO] main: 261件の為替データを取得しました: USD/JPY, 1d
+2025-04-15 21:11:30 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:11:30 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:11:30 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:11:36 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:11:36 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:11:36 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:11:39 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:11:39 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:11:39 [INFO] main: 進化的学習の開始: USD/JPY, LSTM, 世代数=10, 集団サイズ=5
+2025-04-15 21:11:39 [INFO] main: 為替データの取得: USD/JPY, 1h, 60日間
+2025-04-15 21:11:39 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:11:52 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:11:52 [INFO] main: 42件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:11:52 [INFO] main: 為替データの取得: USD/JPY, 1h, 10日間
+2025-04-15 21:11:52 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:12:07 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:12:07 [INFO] main: 7件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:12:07 [INFO] models.evolution: 初期集団生成: 20個のLSTMモデルを作成します
+2025-04-15 21:12:07 [INFO] main: 世代 1/10 の学習開始
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 3)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 3)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 1)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 1)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 4)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 4)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 1)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 1)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 3)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 3)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 3)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 3)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:07 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 2)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 2)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 2)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 2)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 4)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 4)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: tuple index out of range
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 282, in train
+    self._build_model(input_shape=(X_train.shape[1], X_train.shape[2]))
+                                   ~~~~~~~~~~~~~^^^
+IndexError: tuple index out of range
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 4)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 4)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: モデル学習エラー: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 277, in train
+    X_val, y_val, _ = self._preprocess_data(df_val, target_col)
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 133, in _preprocess_data
+    X_scaled = self.scaler_X.transform(df_copy[available_features])
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\preprocessing\_data.py", line 532, in transform
+    X = validate_data(
+        self,
+    ...<5 lines>...
+        reset=False,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 2944, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sklearn\utils\validation.py", line 1130, in check_array
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Found array with 0 sample(s) (shape=(0, 5)) while a minimum of 1 is required by MinMaxScaler.
+2025-04-15 21:12:08 [ERROR] main: 進化的学習エラー: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 375, in run_evolution
+    next_population = self.genetic_algorithm.evolve_generation(
+        current_population=population,
+    ...<2 lines>...
+        all_features=all_features
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\evolution.py", line 494, in evolve_generation
+    parents = self.select_parents(
+        current_population,
+    ...<2 lines>...
+        method="tournament"
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\evolution.py", line 338, in select_parents
+    return self._tournament_selection(population, fitness_scores, n_parents)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\evolution.py", line 366, in _tournament_selection
+    tournament_fitness = [fitness_scores[i] for i in tournament_indices]
+                          ~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2025-04-15 21:12:08 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:12:08 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:12:08 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:13:54 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:13:54 [ERROR] __main__: データベース接続エラー: Textual SQL expression 'SELECT COUNT(*) FROM news...' should be explicitly declared as text('SELECT COUNT(*) FROM news...')
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\test_db.py", line 14, in test_db_connection
+    news_count = session.execute("SELECT COUNT(*) FROM news_items").scalar()
+                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\scoping.py", line 779, in execute
+    return self._proxied.execute(
+           ~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2149, in _execute_internal
+    statement = coercions.expect(roles.StatementRole, statement)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\sql\coercions.py", line 395, in expect
+    resolved = impl._literal_coercion(
+        element, argname=argname, **kw
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\sql\coercions.py", line 621, in _literal_coercion
+    return self._text_coercion(element, argname, **kw)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\sql\coercions.py", line 614, in _text_coercion
+    return _no_text_coercion(element, argname)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\sql\coercions.py", line 584, in _no_text_coercion
+    raise exc_cls(
+    ...<7 lines>...
+    ) from err
+sqlalchemy.exc.ArgumentError: Textual SQL expression 'SELECT COUNT(*) FROM news...' should be explicitly declared as text('SELECT COUNT(*) FROM news...')
+2025-04-15 21:14:14 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:14:14 [INFO] __main__: ニュース記事数: 187件
+2025-04-15 21:14:14 [INFO] __main__: 為替レート数: 316件
+2025-04-15 21:14:14 [INFO] __main__: 最新のニュース記事:
+2025-04-15 21:14:14 [INFO] __main__: - XRP Price Turns Green, Sparks Hopes of a Fresh Upside Push (newsBTC, 2025-04-14 05:08:19)
+2025-04-15 21:14:14 [INFO] __main__: - China Doesn't Know What to Do With Trump (Americanthinker.com, 2025-04-14 04:00:00)
+2025-04-15 21:14:14 [INFO] __main__: 最新の為替レート:
+2025-04-15 21:14:14 [INFO] __main__: - USD/JPY: 143.056 (2025-04-15 00:00:00)
+2025-04-15 21:14:14 [INFO] __main__: - USD/JPY: 142.963 (2025-04-14 00:00:00)
+2025-04-15 21:14:14 [INFO] __main__: - USD/JPY: 143.49 (2025-04-11 00:00:00)
+2025-04-15 21:14:30 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:14:30 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:14:30 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:14:32 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:14:32 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:14:32 [INFO] main: 為替データの取得: USD/JPY, 1h, 30日間
+2025-04-15 21:14:32 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:14:47 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:14:47 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:14:47 [INFO] main: 為替データの取得: USD/JPY, 1h, 7日間
+2025-04-15 21:14:47 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:15:01 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:15:01 [INFO] main: 5件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:15:01 [ERROR] main: モデル学習エラー: tuple index out of range
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 282, in train
+    self._build_model(input_shape=(X_train.shape[1], X_train.shape[2]))
+                                   ~~~~~~~~~~~~~^^^
+IndexError: tuple index out of range
+2025-04-15 21:15:01 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:15:01 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:15:01 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:15:36 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:15:36 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:15:36 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:15:38 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:15:38 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:15:38 [INFO] main: 為替データの取得: USD/JPY, 1h, 30日間
+2025-04-15 21:15:38 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:15:51 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:15:51 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:15:51 [INFO] main: 為替データの取得: USD/JPY, 1h, 7日間
+2025-04-15 21:15:51 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:16:07 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:16:07 [INFO] main: 5件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:16:07 [ERROR] main: モデル学習エラー: データ数が不足しています（必要数: 61、実際: 22）
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 168, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 283, in train
+    X_train, y_train, _ = self._preprocess_data(df_train, target_col)
+                          ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 128, in _preprocess_data
+    raise ValueError(f"データ数が不足しています（必要数: {self.sequence_length + 1}、実際: {len(df_copy)}）")
+ValueError: データ数が不足しています（必要数: 61、実際: 22）
+2025-04-15 21:16:07 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:16:07 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:16:07 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:17:12 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:17:12 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:17:12 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:17:14 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:17:14 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:17:14 [INFO] main: 為替データの取得: USD/JPY, 1h, 30日間
+2025-04-15 21:17:14 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:17:29 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:17:29 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:17:29 [INFO] main: 為替データの取得: USD/JPY, 1h, 7日間
+2025-04-15 21:17:29 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:17:42 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:17:42 [INFO] main: 5件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:17:42 [ERROR] main: サポートされていないモデルタイプ: lstm
+2025-04-15 21:17:42 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:17:42 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:17:42 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:20:51 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:20:51 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:20:51 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:20:53 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:20:53 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:20:53 [INFO] main: 為替データの取得: USD/JPY, 1h, 30日間
+2025-04-15 21:20:53 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:21:07 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:21:07 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:21:07 [INFO] main: 為替データの取得: USD/JPY, 1h, 7日間
+2025-04-15 21:21:07 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 21:21:20 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:21:20 [INFO] main: 5件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 21:21:20 [ERROR] main: モデル学習エラー: 'object' object has no attribute 'add'
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 170, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 265, in train
+    self._build_model(input_shape=(X_train.shape[1], X_train.shape[2]))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 201, in _build_model
+    model.add(tf.keras.layers.LSTM(
+    ^^^^^^^^^
+AttributeError: 'object' object has no attribute 'add'
+2025-04-15 21:21:20 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:21:20 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:21:20 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:26:17 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:26:17 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:26:17 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:26:19 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:26:19 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:26:19 [INFO] main: 為替データの取得: USD/JPY, 1d, 365日間
+2025-04-15 21:26:34 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:26:34 [INFO] main: 261件の為替データを取得しました: USD/JPY, 1d
+2025-04-15 21:26:34 [INFO] main: 為替データの取得: USD/JPY, 1d, 30日間
+2025-04-15 21:26:47 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:26:47 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1d
+2025-04-15 21:26:47 [ERROR] main: モデル学習エラー: TimeSeriesModel.train() got an unexpected keyword argument 'early_stopping'
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 170, in train_model
+    train_results = model.train(
+        df_train=train_data,
+    ...<2 lines>...
+        save_model=True
+    )
+TypeError: TimeSeriesModel.train() got an unexpected keyword argument 'early_stopping'
+2025-04-15 21:26:47 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:26:47 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:26:47 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 21:27:14 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 21:27:14 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 21:27:14 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 21:27:16 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 21:27:16 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 21:27:16 [INFO] main: 為替データの取得: USD/JPY, 1d, 365日間
+2025-04-15 21:27:31 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:27:31 [INFO] main: 261件の為替データを取得しました: USD/JPY, 1d
+2025-04-15 21:27:31 [INFO] main: 為替データの取得: USD/JPY, 1d, 30日間
+2025-04-15 21:27:45 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 21:27:45 [INFO] main: 22件の為替データを取得しました: USD/JPY, 1d
+2025-04-15 21:27:45 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 21:27:45 [ERROR] main: モデル学習エラー: [Errno 2] No such file or directory: 'models/saved\\rf_USD/JPY_20250415_212745.joblib'
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 170, in train_model
+    train_results = model.train(
+        df_train=train_data,
+        df_val=val_data,
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 186, in train
+    joblib.dump(self.model, model_save_path)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 552, in dump
+    with open(filename, 'wb') as f:
+         ~~~~^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'models/saved\\rf_USD/JPY_20250415_212745.joblib'
+2025-04-15 21:27:45 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 21:27:45 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 21:27:45 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:13:05 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:13:05 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:13:05 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:13:07 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:13:07 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:13:07 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:13:07 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:13:08 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:13:08 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:13:08 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:13:08 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:13:08 [ERROR] main: データ取得エラー: type object 'datetime.datetime' has no attribute 'datetime'
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 86, in fetch_data
+    end_date = datetime.datetime.utcnow()
+               ^^^^^^^^^^^^^^^^^
+AttributeError: type object 'datetime.datetime' has no attribute 'datetime'
+2025-04-15 23:13:08 [ERROR] main: コマンド実行エラー: 学習データが取得できませんでした
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 583, in train_command
+    raise ValueError("学習データが取得できませんでした")
+ValueError: 学習データが取得できませんでした
+2025-04-15 23:13:08 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:13:08 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:13:08 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:13:08 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:13:08 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:13:08 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:13:28 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:13:28 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:13:28 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:13:31 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:13:31 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:13:31 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:13:31 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:13:31 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:13:31 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:13:31 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:13:31 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:13:31 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:13:45 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 23:13:45 [INFO] main: 261件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:13:45 [INFO] main: 学習データ: 208件, 検証データ: 53件
+2025-04-15 23:13:45 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:13:45 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 23:13:46 [ERROR] main: モデル学習エラー: [Errno 2] No such file or directory: 'models/saved\\rf_USD/JPY_20250415_231346.joblib'
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 201, in train_model
+    train_results = model.train(
+        df_train=train_data,
+        df_val=val_data,
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 188, in train
+    joblib.dump(self.model, model_save_path)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 552, in dump
+    with open(filename, 'wb') as f:
+         ~~~~^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'models/saved\\rf_USD/JPY_20250415_231346.joblib'
+2025-04-15 23:13:46 [ERROR] main: モデル学習に失敗しました: [Errno 2] No such file or directory: 'models/saved\\rf_USD/JPY_20250415_231346.joblib'
+2025-04-15 23:13:46 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:13:46 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:13:46 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:13:46 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:13:46 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:13:46 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:15:09 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:15:09 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:15:09 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:15:11 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:15:11 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:15:11 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:15:11 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:15:11 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:15:11 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:15:11 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:15:11 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:15:11 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:15:27 [INFO] data.data_fetcher: 0件の為替レートをデータベースに保存しました
+2025-04-15 23:15:27 [INFO] main: 261件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:15:27 [INFO] main: 学習データ: 208件, 検証データ: 53件
+2025-04-15 23:15:27 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:15:27 [ERROR] main: モデル学習エラー: module 'datetime' has no attribute 'utcnow'
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 201, in train_model
+    train_results = model.train(
+        df_train=train_data,
+        df_val=val_data,
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 135, in train
+    training_start = datetime.utcnow()
+                     ^^^^^^^^^^^^^^^
+AttributeError: module 'datetime' has no attribute 'utcnow'
+2025-04-15 23:15:27 [ERROR] main: モデル学習に失敗しました: module 'datetime' has no attribute 'utcnow'
+2025-04-15 23:15:27 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:15:27 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:15:27 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:15:27 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:15:27 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:15:27 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:17:05 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:17:05 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:17:06 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:17:07 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:17:07 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:17:07 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:17:07 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:17:08 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:17:08 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:17:08 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:17:08 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:17:08 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:17:20 [WARNING] data.data_fetcher: 為替レート時系列データが取得できませんでした: {'Information': 'We have detected your API key as BB2JD5LB7Y4HDQEU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits.'}
+2025-04-15 23:17:20 [WARNING] main: 為替データが取得できませんでした: USD/JPY, 1h
+2025-04-15 23:17:20 [ERROR] main: コマンド実行エラー: 学習データが取得できませんでした
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 582, in train_command
+    raise ValueError("学習データが取得できませんでした")
+ValueError: 学習データが取得できませんでした
+2025-04-15 23:17:20 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:17:20 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:17:20 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:17:20 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:17:20 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:17:20 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:25:27 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:25:27 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:25:27 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:25:29 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:25:29 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:25:29 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:25:29 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:25:30 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:25:30 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:25:30 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:25:30 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:25:30 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:25:30 [INFO] data.data_fetcher: データベースから312件の為替レートを取得しました
+2025-04-15 23:25:30 [INFO] main: 312件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:25:30 [INFO] main: 学習データ: 249件, 検証データ: 63件
+2025-04-15 23:25:30 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:25:30 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 23:25:30 [ERROR] models.lstm_model: モデルメタデータの保存に失敗しました: 'RandomForestRegressor' object has no attribute 'state_dict'
+2025-04-15 23:25:30 [ERROR] main: モデル学習エラー: 'RandomForestRegressor' object has no attribute 'state_dict'
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 201, in train_model
+    train_results = model.train(
+        df_train=train_data,
+        df_val=val_data,
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 182, in train
+    self._save_model_metadata(self.db_model_id, training_start, training_end)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 364, in _save_model_metadata
+    torch.save(self.model.state_dict(), model_bytes)
+               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'RandomForestRegressor' object has no attribute 'state_dict'
+2025-04-15 23:25:30 [ERROR] main: モデル学習に失敗しました: 'RandomForestRegressor' object has no attribute 'state_dict'
+2025-04-15 23:25:30 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:25:30 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:25:30 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:25:30 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:25:30 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:25:30 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:26:05 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:26:06 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:26:06 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:26:08 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:26:08 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:26:08 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:26:08 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:26:09 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:26:09 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:26:09 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:26:09 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:26:09 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:26:09 [INFO] data.data_fetcher: データベースから312件の為替レートを取得しました
+2025-04-15 23:26:09 [INFO] main: 312件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:26:09 [INFO] main: 学習データ: 249件, 検証データ: 63件
+2025-04-15 23:26:09 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:26:09 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 23:26:09 [ERROR] models.lstm_model: モデルメタデータの保存に失敗しました: (psycopg2.errors.UndefinedColumn) 列models.model_dataは存在しません
+LINE 1: ...rameters, models.model_path AS models_model_path, models.mod...
+                                                             ^
+HINT:  列"models.model_path"を参照しようとしていたようです。
+
+[SQL: SELECT models.id AS models_id, models.uuid AS models_uuid, models.name AS models_name, models.model_type AS models_model_type, models.currency_pair AS models_currency_pair, models.generation AS models_generation, models.parent_id AS models_parent_id, models.parent_uuid AS models_parent_uuid, models.hyperparameters AS models_hyperparameters, models.model_path AS models_model_path, models.model_data AS models_model_data, models.scaler_data AS models_scaler_data, models.features AS models_features, models.training_start AS models_training_start, models.training_end AS models_training_end, models.training_duration AS models_training_duration, models.created_at AS models_created_at, models.updated_at AS models_updated_at 
+FROM models 
+WHERE models.id IS NULL 
+ LIMIT %(param_1)s]
+[parameters: {'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-04-15 23:26:09 [ERROR] main: モデル学習エラー: (psycopg2.errors.UndefinedColumn) 列models.model_dataは存在しません
+LINE 1: ...rameters, models.model_path AS models_model_path, models.mod...
+                                                             ^
+HINT:  列"models.model_path"を参照しようとしていたようです。
+
+[SQL: SELECT models.id AS models_id, models.uuid AS models_uuid, models.name AS models_name, models.model_type AS models_model_type, models.currency_pair AS models_currency_pair, models.generation AS models_generation, models.parent_id AS models_parent_id, models.parent_uuid AS models_parent_uuid, models.hyperparameters AS models_hyperparameters, models.model_path AS models_model_path, models.model_data AS models_model_data, models.scaler_data AS models_scaler_data, models.features AS models_features, models.training_start AS models_training_start, models.training_end AS models_training_end, models.training_duration AS models_training_duration, models.created_at AS models_created_at, models.updated_at AS models_updated_at 
+FROM models 
+WHERE models.id IS NULL 
+ LIMIT %(param_1)s]
+[parameters: {'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: 列models.model_dataは存在しません
+LINE 1: ...rameters, models.model_path AS models_model_path, models.mod...
+                                                             ^
+HINT:  列"models.model_path"を参照しようとしていたようです。
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 201, in train_model
+    train_results = model.train(
+        df_train=train_data,
+        df_val=val_data,
+        save_model=True
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 182, in train
+    self._save_model_metadata(self.db_model_id, training_start, training_end)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 372, in _save_model_metadata
+    model = self.db.get_session().query(DbModel).filter_by(id=model_id).first()
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2759, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) 列models.model_dataは存在しません
+LINE 1: ...rameters, models.model_path AS models_model_path, models.mod...
+                                                             ^
+HINT:  列"models.model_path"を参照しようとしていたようです。
+
+[SQL: SELECT models.id AS models_id, models.uuid AS models_uuid, models.name AS models_name, models.model_type AS models_model_type, models.currency_pair AS models_currency_pair, models.generation AS models_generation, models.parent_id AS models_parent_id, models.parent_uuid AS models_parent_uuid, models.hyperparameters AS models_hyperparameters, models.model_path AS models_model_path, models.model_data AS models_model_data, models.scaler_data AS models_scaler_data, models.features AS models_features, models.training_start AS models_training_start, models.training_end AS models_training_end, models.training_duration AS models_training_duration, models.created_at AS models_created_at, models.updated_at AS models_updated_at 
+FROM models 
+WHERE models.id IS NULL 
+ LIMIT %(param_1)s]
+[parameters: {'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-04-15 23:26:09 [ERROR] main: モデル学習に失敗しました: (psycopg2.errors.UndefinedColumn) 列models.model_dataは存在しません
+LINE 1: ...rameters, models.model_path AS models_model_path, models.mod...
+                                                             ^
+HINT:  列"models.model_path"を参照しようとしていたようです。
+
+[SQL: SELECT models.id AS models_id, models.uuid AS models_uuid, models.name AS models_name, models.model_type AS models_model_type, models.currency_pair AS models_currency_pair, models.generation AS models_generation, models.parent_id AS models_parent_id, models.parent_uuid AS models_parent_uuid, models.hyperparameters AS models_hyperparameters, models.model_path AS models_model_path, models.model_data AS models_model_data, models.scaler_data AS models_scaler_data, models.features AS models_features, models.training_start AS models_training_start, models.training_end AS models_training_end, models.training_duration AS models_training_duration, models.created_at AS models_created_at, models.updated_at AS models_updated_at 
+FROM models 
+WHERE models.id IS NULL 
+ LIMIT %(param_1)s]
+[parameters: {'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-04-15 23:26:09 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:26:09 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:26:09 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:26:09 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:26:09 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:26:09 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:27:38 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:27:38 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:27:50 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:27:50 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:27:50 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:27:53 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:27:53 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:27:53 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:27:53 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:27:53 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:27:53 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:27:53 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:27:53 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:27:53 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:28:06 [WARNING] data.data_fetcher: 為替レート時系列データが取得できませんでした: {'Information': 'We have detected your API key as BB2JD5LB7Y4HDQEU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits.'}
+2025-04-15 23:28:06 [INFO] data.data_fetcher: デモデータを生成します
+2025-04-15 23:28:06 [INFO] data.data_fetcher: 366件の為替レートをデータベースに保存しました
+2025-04-15 23:28:06 [INFO] main: 366件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:28:06 [INFO] main: 学習データ: 292件, 検証データ: 74件
+2025-04-15 23:28:06 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:28:06 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 23:28:07 [ERROR] models.lstm_model: モデルが見つかりません: ID=None
+2025-04-15 23:28:07 [INFO] models.lstm_model: モデル学習完了: RMSE=1.0363503512189578
+2025-04-15 23:28:07 [ERROR] main: モデル学習エラー: type object 'datetime.datetime' has no attribute 'datetime'
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 209, in train_model
+    evaluation = model.evaluate(val_data, save_to_db=True)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 268, in evaluate
+    "timestamp": datetime.datetime.utcnow()
+                 ^^^^^^^^^^^^^^^^^
+AttributeError: type object 'datetime.datetime' has no attribute 'datetime'
+2025-04-15 23:28:07 [ERROR] main: モデル学習に失敗しました: type object 'datetime.datetime' has no attribute 'datetime'
+2025-04-15 23:28:07 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:28:07 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:28:07 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:28:07 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:28:07 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:28:07 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:29:02 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:29:02 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:29:02 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:29:04 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:29:04 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:29:04 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:29:04 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:29:05 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:29:05 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:29:05 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:29:05 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:29:05 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:29:05 [INFO] data.data_fetcher: データベースから365件の為替レートを取得しました
+2025-04-15 23:29:05 [INFO] main: 365件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:29:05 [INFO] main: 学習データ: 292件, 検証データ: 73件
+2025-04-15 23:29:05 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:29:05 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 23:29:06 [ERROR] models.lstm_model: モデルが見つかりません: ID=None
+2025-04-15 23:29:06 [INFO] models.lstm_model: モデル学習完了: RMSE=1.2861564122426052
+2025-04-15 23:29:06 [INFO] models.lstm_model: モデル評価: RMSE=1.286156, 方向予測精度=54.84%
+2025-04-15 23:29:06 [INFO] main: モデル学習が完了しました。モデルID: None
+2025-04-15 23:29:06 [INFO] main: 学習結果: {'training_start': datetime.datetime(2025, 4, 15, 23, 29, 5, 725421), 'training_end': datetime.datetime(2025, 4, 15, 23, 29, 6, 419582), 'training_duration': 0.694161, 'val_mse': np.float64(1.65419831675277), 'val_rmse': np.float64(1.2861564122426052), 'val_mae': np.float64(1.057235429436759), 'model_saved': True, 'mse': np.float64(1.65419831675277), 'rmse': np.float64(1.2861564122426052), 'mae': np.float64(1.057235429436759), 'direction_accuracy': np.float64(0.5483870967741935), 'timestamp': datetime.datetime(2025, 4, 15, 23, 29, 6, 460684)}
+2025-04-15 23:29:06 [INFO] main: モデルの評価を実行しています...
+2025-04-15 23:29:06 [ERROR] main: モデル読み込みエラー: name 'DbModel' is not defined
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 456, in _load_model
+    model_record = session.query(DbModel).filter_by(id=model_id).first()
+                                 ^^^^^^^
+NameError: name 'DbModel' is not defined
+2025-04-15 23:29:06 [ERROR] main: モデル評価エラー: モデルが見つかりません: ID=None
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 434, in evaluate_model
+    raise ValueError(f"モデルが見つかりません: ID={model_id}")
+ValueError: モデルが見つかりません: ID=None
+2025-04-15 23:29:06 [INFO] main: 評価結果: {'error': 'モデルが見つかりません: ID=None'}
+2025-04-15 23:29:06 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:29:06 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:29:06 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:29:06 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:29:06 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:29:06 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:30:08 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:30:08 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:30:08 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:30:11 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:30:11 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:30:11 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:30:11 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:30:12 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:30:12 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:30:12 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:30:12 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:30:12 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:30:12 [INFO] data.data_fetcher: データベースから365件の為替レートを取得しました
+2025-04-15 23:30:12 [INFO] main: 365件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:30:12 [INFO] main: 学習データ: 292件, 検証データ: 73件
+2025-04-15 23:30:12 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:30:12 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 23:30:12 [ERROR] models.lstm_model: モデルが見つかりません: ID=None
+2025-04-15 23:30:12 [INFO] models.lstm_model: モデル学習完了: RMSE=1.2861564122426052
+2025-04-15 23:30:12 [INFO] models.lstm_model: モデル評価: RMSE=1.286156, 方向予測精度=54.84%
+2025-04-15 23:30:12 [INFO] main: モデル学習が完了しました。モデルID: None
+2025-04-15 23:30:12 [INFO] main: 学習結果: {'training_start': datetime.datetime(2025, 4, 15, 23, 30, 12, 38125), 'training_end': datetime.datetime(2025, 4, 15, 23, 30, 12, 727603), 'training_duration': 0.689478, 'val_mse': np.float64(1.65419831675277), 'val_rmse': np.float64(1.2861564122426052), 'val_mae': np.float64(1.057235429436759), 'model_saved': True, 'mse': np.float64(1.65419831675277), 'rmse': np.float64(1.2861564122426052), 'mae': np.float64(1.057235429436759), 'direction_accuracy': np.float64(0.5483870967741935), 'timestamp': datetime.datetime(2025, 4, 15, 23, 30, 12, 765371)}
+2025-04-15 23:30:12 [INFO] main: モデルの評価を実行しています...
+2025-04-15 23:30:12 [ERROR] main: モデル評価エラー: モデルが見つかりません: ID=None
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\main.py", line 438, in evaluate_model
+    raise ValueError(f"モデルが見つかりません: ID={model_id}")
+ValueError: モデルが見つかりません: ID=None
+2025-04-15 23:30:12 [INFO] main: 評価結果: {'error': 'モデルが見つかりません: ID=None'}
+2025-04-15 23:30:12 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:30:12 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:30:12 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:30:12 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:30:12 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:30:12 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:30:55 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:30:55 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:30:55 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:30:58 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:30:58 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:30:58 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:30:58 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:30:58 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:30:58 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:30:58 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:30:58 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:30:58 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:30:58 [INFO] data.data_fetcher: データベースから365件の為替レートを取得しました
+2025-04-15 23:30:58 [INFO] main: 365件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:30:58 [INFO] main: 学習データ: 292件, 検証データ: 73件
+2025-04-15 23:30:58 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:30:58 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 23:30:59 [INFO] models.lstm_model: モデルメタデータを更新しました: LSTM_USD/JPY_20250415_2330
+2025-04-15 23:30:59 [INFO] models.lstm_model: モデルをデータベースに保存しました: ID=1
+2025-04-15 23:30:59 [INFO] models.lstm_model: モデル学習完了: RMSE=1.2861564122426052
+2025-04-15 23:30:59 [INFO] models.lstm_model: モデル評価: RMSE=1.286156, 方向予測精度=54.84%
+2025-04-15 23:30:59 [ERROR] models.lstm_model: 評価結果の保存エラー: (psycopg2.errors.InvalidSchemaName) スキーマ"np"は存在しません
+LINE 1: ....0, 0.0, 0, 0, 0.0, NULL, NULL, NULL, NULL, NULL, np.float64...
+                                                             ^
+
+[SQL: INSERT INTO model_performances (model_id, evaluation_type, start_date, end_date, profit, profit_percent, win_count, loss_count, win_rate, avg_win, avg_loss, max_drawdown, sharpe_ratio, sortino_ratio, accuracy, precision, recall, f1_score, fitness_score, details, created_at) VALUES (%(model_id)s, %(evaluation_type)s, %(start_date)s, %(end_date)s, %(profit)s, %(profit_percent)s, %(win_count)s, %(loss_count)s, %(win_rate)s, %(avg_win)s, %(avg_loss)s, %(max_drawdown)s, %(sharpe_ratio)s, %(sortino_ratio)s, %(accuracy)s, %(precision)s, %(recall)s, %(f1_score)s, %(fitness_score)s, %(details)s::JSON, %(created_at)s) RETURNING model_performances.id]
+[parameters: {'model_id': 1, 'evaluation_type': 'validation', 'start_date': Timestamp('2025-02-02 14:27:53.534596'), 'end_date': Timestamp('2025-04-15 14:27:53.534596'), 'profit': 0.0, 'profit_percent': 0.0, 'win_count': 0, 'loss_count': 0, 'win_rate': 0.0, 'avg_win': None, 'avg_loss': None, 'max_drawdown': None, 'sharpe_ratio': None, 'sortino_ratio': None, 'accuracy': np.float64(54.83870967741935), 'precision': None, 'recall': None, 'f1_score': None, 'fitness_score': 0.0, 'details': '{"mse": 1.65419831675277, "rmse": 1.2861564122426052, "mae": 1.057235429436759}', 'created_at': datetime.datetime(2025, 4, 15, 14, 30, 59, 574910)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.InvalidSchemaName: スキーマ"np"は存在しません
+LINE 1: ....0, 0.0, 0, 0, 0.0, NULL, NULL, NULL, NULL, NULL, np.float64...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\fx_learning_agent\models\lstm_model.py", line 473, in _save_evaluation_results
+    session.commit()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\scoping.py", line 599, in commit
+    return self._proxied.commit()
+           ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2032, in commit
+    trans.commit(_to_root=True)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "<string>", line 2, in commit
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1313, in commit
+    self._prepare_impl()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1288, in _prepare_impl
+    self.session.flush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        insert,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+        statement,
+        params,
+        execution_options=execution_options,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sawad\OneDrive\デスクトップ\portfolio\toy_box\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.InvalidSchemaName) スキーマ"np"は存在しません
+LINE 1: ....0, 0.0, 0, 0, 0.0, NULL, NULL, NULL, NULL, NULL, np.float64...
+                                                             ^
+
+[SQL: INSERT INTO model_performances (model_id, evaluation_type, start_date, end_date, profit, profit_percent, win_count, loss_count, win_rate, avg_win, avg_loss, max_drawdown, sharpe_ratio, sortino_ratio, accuracy, precision, recall, f1_score, fitness_score, details, created_at) VALUES (%(model_id)s, %(evaluation_type)s, %(start_date)s, %(end_date)s, %(profit)s, %(profit_percent)s, %(win_count)s, %(loss_count)s, %(win_rate)s, %(avg_win)s, %(avg_loss)s, %(max_drawdown)s, %(sharpe_ratio)s, %(sortino_ratio)s, %(accuracy)s, %(precision)s, %(recall)s, %(f1_score)s, %(fitness_score)s, %(details)s::JSON, %(created_at)s) RETURNING model_performances.id]
+[parameters: {'model_id': 1, 'evaluation_type': 'validation', 'start_date': Timestamp('2025-02-02 14:27:53.534596'), 'end_date': Timestamp('2025-04-15 14:27:53.534596'), 'profit': 0.0, 'profit_percent': 0.0, 'win_count': 0, 'loss_count': 0, 'win_rate': 0.0, 'avg_win': None, 'avg_loss': None, 'max_drawdown': None, 'sharpe_ratio': None, 'sortino_ratio': None, 'accuracy': np.float64(54.83870967741935), 'precision': None, 'recall': None, 'f1_score': None, 'fitness_score': 0.0, 'details': '{"mse": 1.65419831675277, "rmse": 1.2861564122426052, "mae": 1.057235429436759}', 'created_at': datetime.datetime(2025, 4, 15, 14, 30, 59, 574910)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-04-15 23:30:59 [INFO] main: モデル学習が完了しました。モデルID: 1
+2025-04-15 23:30:59 [INFO] main: 学習結果: {'training_start': datetime.datetime(2025, 4, 15, 23, 30, 58, 478621), 'training_end': datetime.datetime(2025, 4, 15, 23, 30, 59, 167908), 'training_duration': 0.689287, 'val_mse': np.float64(1.65419831675277), 'val_rmse': np.float64(1.2861564122426052), 'val_mae': np.float64(1.057235429436759), 'model_saved': True, 'mse': np.float64(1.65419831675277), 'rmse': np.float64(1.2861564122426052), 'mae': np.float64(1.057235429436759), 'direction_accuracy': np.float64(0.5483870967741935), 'timestamp': datetime.datetime(2025, 4, 15, 23, 30, 59, 572797)}
+2025-04-15 23:30:59 [INFO] main: モデルの評価を実行しています...
+2025-04-15 23:30:59 [INFO] models.lstm_model: モデルを読み込みました: LSTM_USD/JPY_20250415_2330
+2025-04-15 23:30:59 [INFO] models.lstm_model: モデル評価: RMSE=1.277539, 方向予測精度=54.84%
+2025-04-15 23:30:59 [INFO] main: 評価結果: {'mse': np.float64(1.6321060558352007), 'rmse': np.float64(1.2775390623519896), 'mae': np.float64(1.0680538306929206), 'direction_accuracy': np.float64(0.5483870967741935), 'timestamp': datetime.datetime(2025, 4, 15, 23, 30, 59, 647618)}
+2025-04-15 23:30:59 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:30:59 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:30:59 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:30:59 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:30:59 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:30:59 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:31:41 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:31:41 [INFO] utils.database: postgresqlデータベースに接続しました: fx_learning
+2025-04-15 23:31:41 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:31:43 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:31:43 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:31:43 [INFO] main: FX学習エージェントを初期化しました (ワーカー数: 15)
+2025-04-15 23:31:43 [INFO] utils.database: データベーステーブルを作成しました
+2025-04-15 23:31:44 [INFO] models.sentiment_model: センチメントモデルを初期化しました: distilbert-base-uncased-finetuned-sst-2-english (デバイス: cpu)
+2025-04-15 23:31:44 [INFO] main: FX学習エージェントの初期化が完了しました
+2025-04-15 23:31:44 [INFO] main: USD/JPYの1年分のデータを取得しています...
+2025-04-15 23:31:44 [INFO] main: 為替データの取得: USD/JPY, 1h, 365日間
+2025-04-15 23:31:44 [WARNING] data.data_fetcher: 日次データ（1d）のみ対応しています
+2025-04-15 23:31:44 [INFO] data.data_fetcher: データベースから365件の為替レートを取得しました
+2025-04-15 23:31:44 [INFO] main: 365件の為替データを取得しました: USD/JPY, 1h
+2025-04-15 23:31:44 [INFO] main: 学習データ: 292件, 検証データ: 73件
+2025-04-15 23:31:44 [INFO] main: lstmモデルの学習を開始します...
+2025-04-15 23:31:44 [INFO] models.lstm_model: RandomForestモデルを構築しました: n_estimators=100
+2025-04-15 23:31:45 [INFO] models.lstm_model: モデルメタデータを更新しました: LSTM_USD/JPY_20250415_2331
+2025-04-15 23:31:45 [INFO] models.lstm_model: モデルをデータベースに保存しました: ID=2
+2025-04-15 23:31:45 [INFO] models.lstm_model: モデル学習完了: RMSE=1.2861564122426052
+2025-04-15 23:31:45 [INFO] models.lstm_model: モデル評価: RMSE=1.286156, 方向予測精度=54.84%
+2025-04-15 23:31:45 [INFO] models.lstm_model: モデル評価結果をデータベースに保存しました: モデルID=2
+2025-04-15 23:31:45 [INFO] main: モデル学習が完了しました。モデルID: 2
+2025-04-15 23:31:45 [INFO] main: 学習結果: {'training_start': datetime.datetime(2025, 4, 15, 23, 31, 44, 574643), 'training_end': datetime.datetime(2025, 4, 15, 23, 31, 45, 254130), 'training_duration': 0.679487, 'val_mse': np.float64(1.65419831675277), 'val_rmse': np.float64(1.2861564122426052), 'val_mae': np.float64(1.057235429436759), 'model_saved': True, 'mse': np.float64(1.65419831675277), 'rmse': np.float64(1.2861564122426052), 'mae': np.float64(1.057235429436759), 'direction_accuracy': np.float64(0.5483870967741935), 'timestamp': datetime.datetime(2025, 4, 15, 23, 31, 45, 615455)}
+2025-04-15 23:31:45 [INFO] main: モデルの評価を実行しています...
+2025-04-15 23:31:45 [INFO] models.lstm_model: モデルを読み込みました: LSTM_USD/JPY_20250415_2331
+2025-04-15 23:31:45 [INFO] models.lstm_model: モデル評価: RMSE=1.277539, 方向予測精度=54.84%
+2025-04-15 23:31:45 [INFO] main: 評価結果: {'mse': np.float64(1.6321060558352007), 'rmse': np.float64(1.2775390623519896), 'mae': np.float64(1.0680538306929206), 'direction_accuracy': np.float64(0.5483870967741935), 'timestamp': datetime.datetime(2025, 4, 15, 23, 31, 45, 679390)}
+2025-04-15 23:31:45 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:31:45 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:31:45 [INFO] main: FX学習エージェントをシャットダウンしました
+2025-04-15 23:31:45 [INFO] main: FX学習エージェントをシャットダウンしています...
+2025-04-15 23:31:45 [INFO] utils.database: データベース接続をクローズしました
+2025-04-15 23:31:45 [INFO] main: FX学習エージェントをシャットダウンしました
