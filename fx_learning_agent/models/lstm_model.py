@@ -4,12 +4,13 @@ import pandas as pd
 import uuid
 from datetime import datetime
 from typing import Dict, List, Optional, Any, Union, Tuple
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 import joblib
 import io
 import torch
 import json
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 from utils.logger import get_logger
 from config.config import get_config
@@ -53,79 +54,108 @@ class TimeSeriesModel:
         
         # モデルオブジェクト
         self.model = None
-        self.scaler_X = None
-        self.scaler_y = None
+        self.scaler_X = StandardScaler()
+        self.scaler_y = StandardScaler()
+        self.scaler = None
         
         # モデルID（データベース保存用）
         self.db_model_id = None
         self.model_uuid = self.config.get("uuid")
-    
+        
+        # 市場指数データのスケーラー
+        self.market_scalers = {}
+        
+        # 方向性の精度を追加
+        self.direction_accuracy = None
+
     def _preprocess_data(self, data: pd.DataFrame, market_indices: Optional[Dict[str, pd.DataFrame]] = None) -> Tuple[np.ndarray, np.ndarray]:
-        """データの前処理を行う
-        
+        """データの前処理を行います。
+
         Args:
-            data: 生データ
-            market_indices: 市場指数データの辞書
-            
+            data (pd.DataFrame): 前処理を行うデータフレーム
+            market_indices (Optional[Dict[str, pd.DataFrame]], optional): 市場指数データ
+
         Returns:
-            前処理済みの特徴量とターゲット
+            Tuple[np.ndarray, np.ndarray]: 前処理済みの特徴量とターゲット
         """
-        # 特徴量とターゲットを分離
-        if self.features is None:
-            # デフォルトの特徴量を使用
-            features = ['close', 'high', 'low', 'open', 'volume']
-        else:
-            features = self.features
-        
-        # 市場指数データの追加
+        # 基本特徴量の準備
+        features = data[['open', 'high', 'low', 'close', 'volume']].values
+
+        # 市場指数データの追加（存在する場合）
         if market_indices is not None:
             for index_name, index_data in market_indices.items():
-                # 日付でマージ
-                merged_data = pd.merge(
-                    data,
-                    index_data[['close']].rename(columns={'close': f'{index_name}_close'}),
-                    left_index=True,
-                    right_index=True,
-                    how='left'
-                )
-                # 前方補完
-                merged_data = merged_data.fillna(method='ffill')
-                # 後方補完（最初の欠損値）
-                merged_data = merged_data.fillna(method='bfill')
-                
-                # 特徴量に追加
-                features.append(f'{index_name}_close')
-                data = merged_data
-        
-        X = data[features].values
-        y = data['close'].values
-        
+                merged_data = pd.merge(data, index_data, left_index=True, right_index=True, how='left')
+                merged_data = merged_data[f'close_{index_name}'].fillna(method='ffill').fillna(method='bfill')
+                features = np.column_stack((features, merged_data.values))
+
         # スケーリング
-        if self.scaler_X is None:
-            self.scaler_X = MinMaxScaler()
-            X = self.scaler_X.fit_transform(X)
+        if not hasattr(self, 'scaler_X') or self.scaler_X is None:
+            self.scaler_X = StandardScaler()
+            features_scaled = self.scaler_X.fit_transform(features)
         else:
-            X = self.scaler_X.transform(X)
-            
-        if self.scaler_y is None:
-            self.scaler_y = MinMaxScaler()
-            y = self.scaler_y.fit_transform(y.reshape(-1, 1))
+            features_scaled = self.scaler_X.transform(features)
+
+        # ターゲット値の準備
+        target = data['close'].values.reshape(-1, 1)
+        if not hasattr(self, 'scaler_y') or self.scaler_y is None:
+            self.scaler_y = StandardScaler()
+            target_scaled = self.scaler_y.fit_transform(target)
         else:
-            y = self.scaler_y.transform(y.reshape(-1, 1))
-            
+            target_scaled = self.scaler_y.transform(target)
+
+        # シーケンスデータの作成
+        X, y = [], []
+        # 特徴量とターゲットを準備
+        features = []
+        target = data['close'].values
+
+        # 基本的な特徴量を追加
+        for col in ['open', 'high', 'low', 'close', 'volume']:
+            if col in data.columns:
+                features.append(data[col].values)
+
+        # 市場指数データを追加
+        if market_indices is not None:
+            for index_name, index_data in market_indices.items():
+                if 'close' in index_data.columns:
+                    # インデックスデータを日付でマージ
+                    merged_data = pd.merge(data, index_data[['close']], 
+                                         left_index=True, right_index=True, 
+                                         how='left', suffixes=('', f'_{index_name}'))
+                    # NaNを前方補完と後方補完で埋める
+                    merged_data = merged_data[f'close_{index_name}'].fillna(method='ffill').fillna(method='bfill')
+                    features.append(merged_data.values)
+
+        # 特徴量を結合
+        X = np.column_stack(features)
+
+        # スケーリング
+        if self.scaler is None:
+            self.scaler = StandardScaler()
+            X = self.scaler.fit_transform(X)
+        else:
+            X = self.scaler.transform(X)
+
         # シーケンスデータの作成
         X_seq = []
         y_seq = []
         
         for i in range(len(X) - self.sequence_length):
-            X_seq.append(X[i:i + self.sequence_length].flatten())
-            y_seq.append(y[i + self.sequence_length])
-            
-        return np.array(X_seq), np.array(y_seq)
+            X_seq.append(X[i:i + self.sequence_length])
+            y_seq.append(target[i + self.sequence_length])
+        
+        X_seq = np.array(X_seq)
+        y_seq = np.array(y_seq)
+
+        # シーケンスデータを2次元に変換
+        n_samples = X_seq.shape[0]
+        X_seq = X_seq.reshape(n_samples, -1)
+
+        return X_seq, y_seq
     
-    def _build_model(self):
+    def _build_model(self, input_shape: Tuple[int, ...]) -> RandomForestRegressor:
         """モデルの構築"""
-        self.model = RandomForestRegressor(
+        model = RandomForestRegressor(
             n_estimators=self.n_estimators,
             max_depth=self.max_depth,
             min_samples_split=self.min_samples_split,
@@ -134,108 +164,78 @@ class TimeSeriesModel:
         )
         
         logger.info(f"RandomForestモデルを構築しました: n_estimators={self.n_estimators}")
+        
+        return model
     
-    def train(
+    def fit(
         self,
-        df_train: pd.DataFrame,
-        df_val: Optional[pd.DataFrame] = None,
-        target_col: str = "close",
-        save_model: bool = True
+        data: Union[pd.DataFrame, Tuple[np.ndarray, np.ndarray]],
+        validation_data: Optional[Union[pd.DataFrame, Tuple[np.ndarray, np.ndarray]]] = None,
+        market_indices: Optional[Dict[str, pd.DataFrame]] = None,
+        **kwargs
     ) -> Dict[str, Any]:
-        """モデルの学習
+        """モデルの学習を実行
         
         Args:
-            df_train: 学習用データ
-            df_val: 検証用データ
-            target_col: 予測対象の列名
-            save_model: 学習後にモデルを保存するかどうか
+            data: 学習データ（DataFrameまたは(X, y)のタプル）
+            validation_data: 検証データ（DataFrameまたは(X, y)のタプル）
+            market_indices: 市場指数データ
+            **kwargs: その他の引数
             
         Returns:
-            学習結果の情報
+            学習結果
         """
-        # 学習開始時間
-        training_start = datetime.now()
-        
-        # データの前処理
-        X_train, y_train = self._preprocess_data(df_train)
-        
-        # 検証データがあれば前処理
-        if df_val is not None:
-            X_val, y_val = self._preprocess_data(df_val)
-        
-        # モデルの構築
-        if self.model is None:
-            self._build_model()
-        
-        # 学習の実行
-        self.model.fit(X_train, y_train.ravel())
-        
-        # 学習終了時間
-        training_end = datetime.now()
-        training_duration = (training_end - training_start).total_seconds()
-        
-        # 学習結果
-        train_metrics = {
-            "training_start": training_start,
-            "training_end": training_end,
-            "training_duration": training_duration
-        }
-        
-        # 検証データがある場合は評価を実施
-        if df_val is not None:
-            val_pred = self.model.predict(X_val)
-            val_pred = val_pred.reshape(-1, 1)
-            val_pred = self.scaler_y.inverse_transform(val_pred)
-            y_val_orig = self.scaler_y.inverse_transform(y_val)
+        try:
+            # データの前処理
+            if isinstance(data, tuple):
+                X_processed, y_processed = data
+            else:
+                X_processed, y_processed = self._preprocess_data(data=data, market_indices=market_indices)
             
-            # 評価指標の計算
-            mse = np.mean((y_val_orig - val_pred) ** 2)
-            rmse = np.sqrt(mse)
-            mae = np.mean(np.abs(y_val_orig - val_pred))
+            if validation_data is not None:
+                if isinstance(validation_data, tuple):
+                    X_val_processed, y_val_processed = validation_data
+                else:
+                    X_val_processed, y_val_processed = self._preprocess_data(
+                        data=validation_data,
+                        market_indices=market_indices
+                    )
+                validation_data = (X_val_processed, y_val_processed)
             
-            train_metrics.update({
-                "val_mse": mse,
-                "val_rmse": rmse,
-                "val_mae": mae
-            })
-        
-        # データベースにモデルを保存
-        if save_model:
-            try:
-                session = self.db.get_session()
-                
-                # モデルの保存
-                db_model = DbModel(
-                    uuid=self.model_uuid or str(uuid.uuid4()),
-                    name=f"LSTM_{self.currency_pair}_{datetime.now().strftime('%Y%m%d_%H%M')}",
-                    model_type=self.model_type,
-                    currency_pair=self.currency_pair,
-                    generation=0,
-                    hyperparameters=self.hyperparameters,
-                    features=self.features
+            # モデルの構築
+            self.model = self._build_model(X_processed.shape[1:])
+            
+            # 学習の実行
+            self.model.fit(X_processed, y_processed)
+            
+            # モデルの評価
+            if validation_data is not None:
+                val_mse, val_rmse, val_mae = self.evaluate(
+                    validation_data,
+                    market_indices=market_indices
                 )
-                
-                session.add(db_model)
-                session.commit()
-                
-                # モデルIDを保存
-                self.db_model_id = db_model.id
-                
-                # モデルのメタデータを更新
-                self._save_model_metadata(self.db_model_id, training_start, training_end)
-                train_metrics["model_saved"] = True
-                
-                logger.info(f"モデルをデータベースに保存しました: ID={db_model.id}")
-                
-            except Exception as e:
-                logger.error(f"モデルの保存に失敗しました: {str(e)}")
-                session.rollback()
-            finally:
-                session.close()
-        
-        logger.info(f"モデル学習完了: RMSE={train_metrics.get('val_rmse', 'N/A')}")
-        
-        return train_metrics
+            else:
+                val_mse, val_rmse, val_mae = self.evaluate(
+                    data,
+                    market_indices=market_indices
+                )
+            
+            # モデルの保存
+            self.save()
+            
+            # 学習結果の記録
+            result = {
+                'val_mse': val_mse,
+                'val_rmse': val_rmse,
+                'val_mae': val_mae,
+                'history': {}  # RandomForestRegressorはhistoryを持たない
+            }
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"モデル学習中にエラーが発生しました: {str(e)}")
+            raise
     
     def predict(
         self,
@@ -268,144 +268,143 @@ class TimeSeriesModel:
         
         return y_pred, df.index.tolist()
     
-    def evaluate(
-        self,
-        df: pd.DataFrame,
-        target_col: str = "close",
-        save_to_db: bool = True
-    ) -> Dict[str, Any]:
-        """モデルの評価
-        
+    def evaluate(self, data: Union[pd.DataFrame, Tuple[np.ndarray, np.ndarray]], market_indices: Optional[pd.DataFrame] = None) -> Tuple[float, float, float]:
+        """モデルを評価し、MSE、RMSE、MAEを計算します。
+
         Args:
-            df: 評価用データ
-            target_col: 予測対象の列名
-            save_to_db: 評価結果をデータベースに保存するかどうか
-            
+            data: 評価データ（DataFrameまたは(X, y)のタプル）
+            market_indices: 市場指数データ（オプション）
+
         Returns:
-            評価結果
+            Tuple[float, float, float]: MSE、RMSE、MAE
         """
-        if self.model is None:
-            logger.error("モデルがロードされていません")
-            raise ValueError("モデルがロードされていません")
-        
-        # データの前処理
-        X, y_true_scaled = self._preprocess_data(df)
-        
-        # 予測の実行
-        y_pred_scaled = self.model.predict(X)
-        y_pred_scaled = y_pred_scaled.reshape(-1, 1)
-        
-        # スケール逆変換
-        y_true = self.scaler_y.inverse_transform(y_true_scaled)
-        y_pred = self.scaler_y.inverse_transform(y_pred_scaled)
-        
-        # 評価指標の計算
-        mse = np.mean((y_true - y_pred) ** 2)
-        rmse = np.sqrt(mse)
-        mae = np.mean(np.abs(y_true - y_pred))
-        
-        # 方向予測の正確さ
-        y_true_diff = np.diff(y_true.flatten())
-        y_pred_diff = np.diff(y_pred.flatten())
-        direction_match = (np.sign(y_true_diff) == np.sign(y_pred_diff))
-        direction_accuracy = np.mean(direction_match)
-        
-        # 評価結果
-        evaluation = {
-            "mse": mse,
-            "rmse": rmse,
-            "mae": mae,
-            "direction_accuracy": direction_accuracy,
-            "timestamp": datetime.now()
-        }
-        
-        logger.info(f"モデル評価: RMSE={rmse:.6f}, 方向予測精度={direction_accuracy:.2%}")
-        
-        # データベースに保存
-        if save_to_db and self.db_model_id:
-            self._save_evaluation_results(evaluation, df.index[0], df.index[-1])
-        
-        return evaluation
+        try:
+            if isinstance(data, tuple):
+                X_processed, y_processed = data
+            else:
+                X_processed, y_processed = self._preprocess_data(data, market_indices)
+
+            # 予測を実行
+            y_pred = self.model.predict(X_processed)
+
+            # スケーリングを元に戻す
+            # 予測値を元のスケールに戻すために、同じ次元のゼロ行列を作成
+            y_pred_full = np.zeros((y_pred.shape[0], self.scaler.scale_.shape[0]))
+            # 予測値を適切な位置（close価格の位置）に配置
+            y_pred_full[:, 3] = y_pred
+            # スケーリングを元に戻す
+            y_pred = self.scaler.inverse_transform(y_pred_full)[:, 3]
+            y_true = y_processed
+
+            # 評価指標を計算
+            mse = mean_squared_error(y_true, y_pred)
+            rmse = np.sqrt(mse)
+            mae = mean_absolute_error(y_true, y_pred)
+
+            return mse, rmse, mae
+
+        except Exception as e:
+            logger.error(f"モデル評価中にエラーが発生しました: {str(e)}")
+            raise
     
-    def save(self, path: Optional[str] = None) -> str:
-        """モデルの保存
+    def save(self) -> int:
+        """モデルをデータベースに保存
         
-        Args:
-            path: 保存先パス
-            
         Returns:
-            保存先パス
+            保存されたモデルのID
         """
         if self.model is None:
             logger.error("保存するモデルがありません")
             raise ValueError("保存するモデルがありません")
         
-        if path is None:
-            os.makedirs(self.app_config.save_models_path, exist_ok=True)
-            path = os.path.join(
-                self.app_config.save_models_path,
-                f"rf_{self.currency_pair}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        try:
+            session = self.db.get_session()
+            
+            # モデルとスケーラーをバイナリデータに変換
+            model_bytes = io.BytesIO()
+            joblib.dump(self.model, model_bytes)
+            model_bytes.seek(0)
+            
+            scaler_bytes = io.BytesIO()
+            joblib.dump({
+                "scaler_X": self.scaler_X,
+                "scaler_y": self.scaler_y,
+                "market_scalers": self.market_scalers
+            }, scaler_bytes)
+            scaler_bytes.seek(0)
+            
+            # モデルメタデータの作成
+            model = DbModel(
+                name=f"rf_{self.currency_pair}_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                model_type="RandomForest",
+                currency_pair=self.currency_pair,
+                model_data=model_bytes.getvalue(),
+                scaler_data=scaler_bytes.getvalue(),
+                hyperparameters=json.dumps(self.hyperparameters),
+                features=json.dumps(self.features) if self.features else None,
+                sequence_length=self.sequence_length,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
             )
-        
-        # モデル本体の保存
-        model_path = f"{path}.joblib"
-        joblib.dump(self.model, model_path)
-        
-        # スケーラーの保存
-        scaler_path = f"{path}_scalers.joblib"
-        joblib.dump({
-            "scaler_X": self.scaler_X,
-            "scaler_y": self.scaler_y
-        }, scaler_path)
-        
-        # 設定の保存
-        config_path = f"{path}_config.joblib"
-        config_to_save = {
-            "hyperparameters": self.hyperparameters,
-            "model_type": self.model_type,
-            "currency_pair": self.currency_pair,
-            "features": self.features,
-            "sequence_length": self.sequence_length
-        }
-        joblib.dump(config_to_save, config_path)
-        
-        logger.info(f"モデルを保存しました: {model_path}")
-        
-        return model_path
+            
+            session.add(model)
+            session.commit()
+            
+            self.db_model_id = model.id
+            logger.info(f"モデルをデータベースに保存しました: ID={model.id}")
+            
+            return model.id
+            
+        except Exception as e:
+            logger.error(f"モデルの保存に失敗しました: {str(e)}")
+            session.rollback()
+            raise
+        finally:
+            session.close()
     
-    def load(self, model_path: str, config_path: Optional[str] = None, scaler_path: Optional[str] = None) -> None:
+    def load(self, model_id: int, config_path: Optional[str] = None, scaler_path: Optional[str] = None) -> None:
         """モデルの読み込み
         
         Args:
-            model_path: モデルファイルのパス
+            model_id: モデルID
             config_path: 設定ファイルのパス
             scaler_path: スケーラーファイルのパス
         """
-        # モデル本体の読み込み
-        self.model = joblib.load(model_path)
-        
-        # 設定の読み込み
-        if config_path is None:
-            config_path = model_path.replace(".joblib", "_config.joblib")
-        
-        if os.path.exists(config_path):
-            loaded_config = joblib.load(config_path)
-            self.hyperparameters = loaded_config.get("hyperparameters", self.hyperparameters)
-            self.model_type = loaded_config.get("model_type", self.model_type)
-            self.currency_pair = loaded_config.get("currency_pair", self.currency_pair)
-            self.features = loaded_config.get("features", self.features)
-            self.sequence_length = loaded_config.get("sequence_length", self.sequence_length)
-        
-        # スケーラーの読み込み
-        if scaler_path is None:
-            scaler_path = model_path.replace(".joblib", "_scalers.joblib")
-        
-        if os.path.exists(scaler_path):
-            scalers = joblib.load(scaler_path)
-            self.scaler_X = scalers.get("scaler_X")
-            self.scaler_y = scalers.get("scaler_y")
-        
-        logger.info(f"モデルを読み込みました: {model_path}")
+        try:
+            session = self.db.get_session()
+            model = session.query(DbModel).filter_by(id=model_id).first()
+            if model and model.model_data and model.scaler_data:
+                # モデルを読み込む
+                model_bytes = io.BytesIO(model.model_data)
+                self.model = joblib.load(model_bytes)
+                
+                # スケーラーを読み込む
+                scaler_bytes = io.BytesIO(model.scaler_data)
+                scalers = joblib.load(scaler_bytes)
+                self.scaler_X = scalers.get("scaler_X")
+                self.scaler_y = scalers.get("scaler_y")
+                self.market_scalers = scalers.get("market_scalers", {})
+                
+                # 設定の読み込み
+                if config_path is None:
+                    config_path = f"{model.name}_config.joblib"
+                
+                if os.path.exists(config_path):
+                    loaded_config = joblib.load(config_path)
+                    self.hyperparameters = loaded_config.get("hyperparameters", self.hyperparameters)
+                    self.model_type = loaded_config.get("model_type", self.model_type)
+                    self.currency_pair = loaded_config.get("currency_pair", self.currency_pair)
+                    self.features = loaded_config.get("features", self.features)
+                    self.sequence_length = loaded_config.get("sequence_length", self.sequence_length)
+                
+                logger.info(f"モデルを読み込みました: ID={model_id}")
+            else:
+                logger.error(f"モデルデータが見つかりません: ID={model_id}")
+        except Exception as e:
+            logger.error(f"モデルの読み込みに失敗しました: {str(e)}")
+            raise
+        finally:
+            session.close()
     
     def _save_model_metadata(self, model_id: int, training_start: datetime, training_end: datetime) -> None:
         """モデルのメタデータをデータベースに保存"""
