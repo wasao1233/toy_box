@@ -17,6 +17,7 @@ from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 import numpy as np
 import pandas as pd
 import torch
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 # 相対インポートのためにプロジェクトルートをパスに追加
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -42,37 +43,50 @@ class FXLearningAgent:
     成績を向上させることを目指す。
     """
     
-    def __init__(self):
+    def __init__(self, num_workers: int = 15):
         """初期化"""
-        self.config = get_config()
+        self.num_workers = num_workers
         self.db = get_db()
-        self.forex_fetcher = get_forex_fetcher()
-        self.news_fetcher = get_news_fetcher()
-        self.genetic_algorithm = GeneticAlgorithm()
+        self.data_fetcher = get_forex_fetcher()
+        self.sentiment_model = None  # 初期化時にNoneを設定
+        self.logger = get_logger(__name__)  # logger属性を追加
+        self.currency_pair = None  # 通貨ペアの初期化
         
-        # センチメントモデル
-        self.sentiment_model = SentimentModel()
+        self.logger.info(f"FX学習エージェントを初期化しました (ワーカー数: {num_workers})")
         
-        # シャットダウンフラグ
-        self.shutdown_requested = False
+    def _get_model(self, model_type: str, currency_pair: str = None) -> Any:
+        """モデルのインスタンスを取得
         
-        # 並列処理設定
-        self.n_workers = self.config.threads
-        logger.info(f"FX学習エージェントを初期化しました (ワーカー数: {self.n_workers})")
+        Args:
+            model_type: モデルタイプ ("lstm", "sentiment", "randomforest")
+            currency_pair: 通貨ペア
+            
+        Returns:
+            モデルのインスタンス
+        """
+        model_type = model_type.lower()
+        
+        if model_type == "lstm":
+            from models.lstm_model import TimeSeriesModel
+            return TimeSeriesModel(currency_pair=currency_pair)
+        elif model_type == "sentiment":
+            from models.sentiment_model import SentimentModel
+            return SentimentModel()
+        elif model_type == "randomforest":
+            from models.lstm_model import TimeSeriesModel
+            return TimeSeriesModel(currency_pair=currency_pair)
+        else:
+            raise ValueError(f"サポートされていないモデルタイプ: {model_type}")
     
     def initialize(self):
-        """システムの初期化"""
-        # データベースの初期化
-        self.db.initialize()
-        self.db.create_tables()
-        
-        # センチメントモデルの初期化
+        """FX学習エージェントを初期化します"""
         try:
-            self.sentiment_model.initialize()
+            if self.sentiment_model is not None:
+                self.sentiment_model.initialize()
         except Exception as e:
-            logger.error(f"センチメントモデルの初期化エラー: {str(e)}", exc_info=True)
+            self.logger.error(f"センチメントモデルの初期化エラー: {e}")
         
-        logger.info("FX学習エージェントの初期化が完了しました")
+        self.logger.info("FX学習エージェントの初期化が完了しました")
     
     def fetch_data(self, currency_pair: str, timeframe: str, days: int = 30):
         """データ取得
@@ -83,14 +97,14 @@ class FXLearningAgent:
             days: 取得日数
         """
         try:
-            logger.info(f"為替データの取得: {currency_pair}, {timeframe}, {days}日間")
+            self.logger.info(f"為替データの取得: {currency_pair}, {timeframe}, {days}日間")
             
             # 日付範囲の設定
             end_date = datetime.utcnow()
             start_date = end_date - timedelta(days=days)
             
             # 為替データの取得
-            df = self.forex_fetcher.fetch_historical_rates(
+            df = self.data_fetcher.fetch_historical_rates(
                 symbol=currency_pair,
                 timeframe=timeframe,
                 start_date=start_date,
@@ -99,14 +113,14 @@ class FXLearningAgent:
             )
             
             if df.empty:
-                logger.warning(f"為替データが取得できませんでした: {currency_pair}, {timeframe}")
+                self.logger.warning(f"為替データが取得できませんでした: {currency_pair}, {timeframe}")
                 return None
             
-            logger.info(f"{len(df)}件の為替データを取得しました: {currency_pair}, {timeframe}")
+            self.logger.info(f"{len(df)}件の為替データを取得しました: {currency_pair}, {timeframe}")
             return df
             
         except Exception as e:
-            logger.error(f"データ取得エラー: {str(e)}", exc_info=True)
+            self.logger.error(f"データ取得エラー: {str(e)}", exc_info=True)
             return None
     
     def fetch_news(self, keywords: List[str], days: int = 7):
@@ -117,7 +131,7 @@ class FXLearningAgent:
             days: 取得日数
         """
         try:
-            logger.info(f"ニュースデータの取得: {keywords}, {days}日間")
+            self.logger.info(f"ニュースデータの取得: {keywords}, {days}日間")
             
             # デフォルトのキーワードを拡張
             if not keywords:
@@ -146,20 +160,20 @@ class FXLearningAgent:
             )
             
             if not articles:
-                logger.warning(f"ニュースデータが取得できませんでした: {keywords}")
+                self.logger.warning(f"ニュースデータが取得できませんでした: {keywords}")
                 return None
             
-            logger.info(f"{len(articles)}件のニュースデータを取得しました")
+            self.logger.info(f"{len(articles)}件のニュースデータを取得しました")
             
             # 市場指数データの取得
-            market_indices = self.forex_fetcher.fetch_market_indices(
+            market_indices = self.data_fetcher.fetch_market_indices(
                 timeframe="1d",
                 start_date=start_date,
                 end_date=end_date
             )
             
             if market_indices:
-                logger.info(f"{len(market_indices)}件の市場指数データを取得しました")
+                self.logger.info(f"{len(market_indices)}件の市場指数データを取得しました")
             
             # センチメント分析
             if hasattr(self, 'sentiment_model') and self.sentiment_model.model is not None:
@@ -168,89 +182,102 @@ class FXLearningAgent:
             return articles
             
         except Exception as e:
-            logger.error(f"ニュース取得エラー: {str(e)}", exc_info=True)
+            self.logger.error(f"ニュース取得エラー: {str(e)}", exc_info=True)
             return None
     
-    def train_model(
-        self,
-        model_type: str,
-        train_data: Any,
-        val_data: Optional[Any] = None,
-        model_config: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
-        """モデルの学習
-        
-        Args:
-            model_type: モデルタイプ ("lstm" または "sentiment")
-            train_data: 学習データ
-            val_data: 検証データ
-            model_config: モデルの設定
-            
-        Returns:
-            学習結果と評価情報
-        """
+    def train(self, currency_pair: str, model_type: str = "lstm", **kwargs):
+        """モデルの学習を実行"""
         try:
-            model_type = model_type.lower()  # 小文字に統一
-            
-            # データの検証
-            if train_data is None or len(train_data) == 0:
-                raise ValueError("学習データが空です")
-            
-            if val_data is not None and len(val_data) == 0:
-                raise ValueError("検証データが空です")
-            
-            # モデル設定の取得
-            if model_config is None:
-                if model_type == "lstm":
-                    model_config = get_lstm_config()
-                elif model_type == "sentiment":
-                    model_config = get_sentiment_config()
-                else:
-                    raise ValueError(f"サポートされていないモデルタイプ: {model_type}")
-            
             # モデルの初期化
-            if model_type == "lstm":
-                model = TimeSeriesModel(config=model_config.to_dict())
-            elif model_type == "sentiment":
-                model = SentimentModel(config=model_config.to_dict())
-                model.initialize()
-                model._save_model_metadata()
-                return {
-                    "status": "success",
-                    "model_type": model_type,
-                    "model_id": model.db_model_id,
-                    "model_uuid": model_config.uuid,
-                    "results": {"note": "事前学習済みモデルを使用"}
-                }
+            if model_type.lower() == "lstm":
+                self.model = TimeSeriesModel(currency_pair=currency_pair)
             else:
-                raise ValueError(f"サポートされていないモデルタイプ: {model_type}")
+                raise ValueError(f"未対応のモデルタイプです: {model_type}")
             
-            # 学習の実行
-            train_results = model.train(
-                df_train=train_data,
-                df_val=val_data,
-                save_model=True
+            # データの取得
+            self.logger.info(f"1年分のデータを取得します: {currency_pair}")
+            end_date = datetime.utcnow()
+            start_date = end_date - timedelta(days=365)
+            
+            # 為替データの取得
+            rates = self.data_fetcher.fetch_historical_rates(
+                symbol=currency_pair,
+                start_date=start_date,
+                end_date=end_date,
+                timeframe="1d"
             )
             
-            # 評価
-            if val_data is not None:
-                evaluation = model.evaluate(val_data, save_to_db=True)
-                train_results.update(evaluation)
+            if rates.empty:
+                raise ValueError("学習データを取得できませんでした")
             
-            return {
-                "status": "success",
-                "model_type": model_type,
-                "model_id": model.db_model_id,
-                "model_uuid": model_config.uuid,
-                "results": train_results
+            self.logger.info(f"{len(rates)}件の為替データを取得しました: {currency_pair}, 1d")
+            
+            # 市場指数データの取得
+            market_indices = self.data_fetcher.fetch_market_indices(
+                start_date=start_date,
+                end_date=end_date,
+                timeframe="1d"
+            )
+            self.logger.info(f"市場指数データを取得しました: {list(market_indices.keys())}")
+            
+            # データの整合性を確保
+            dates = rates.index
+            for name, df in market_indices.items():
+                # 日付でフィルタリング
+                df = df[df.index.isin(dates)]
+                # 欠損値の補完
+                df = df.reindex(dates)
+                df = df.fillna(method='ffill').fillna(method='bfill')
+                market_indices[name] = df
+            
+            # データの分割
+            train_size = int(len(rates) * 0.8)
+            train_data = rates[:train_size]
+            val_data = rates[train_size:]
+            
+            self.logger.info(f"学習データ: {len(train_data)}件, 検証データ: {len(val_data)}件")
+            
+            # モデルの学習
+            self.logger.info(f"{model_type}モデルの学習を開始します...")
+            training_start = datetime.now()
+            self.model.fit(
+                data=train_data,
+                validation_data=val_data,
+                market_indices=market_indices
+            )
+            training_end = datetime.now()
+            
+            # モデルの評価
+            val_mse, val_rmse, val_mae = self.model.evaluate(val_data, market_indices=market_indices)
+            
+            # モデルの保存
+            model_saved = self.model.save()
+            
+            # 学習結果の記録
+            training_duration = (training_end - training_start).total_seconds()
+            result = {
+                'training_start': training_start,
+                'training_end': training_end,
+                'training_duration': training_duration,
+                'val_mse': val_mse,
+                'val_rmse': val_rmse,
+                'val_mae': val_mae,
+                'model_saved': model_saved,
+                'mse': val_mse,
+                'rmse': val_rmse,
+                'mae': val_mae,
+                'direction_accuracy': self.model.direction_accuracy,
+                'timestamp': datetime.now()
             }
+            
+            self.logger.info(f"モデル学習が完了しました。モデルID: {self.model.model_uuid}")
+            self.logger.info(f"学習結果: {result}")
+            
+            return result
             
         except Exception as e:
-            logger.error(f"モデル学習エラー: {str(e)}", exc_info=True)
-            return {
-                "status": "error",
-                "error": str(e)
-            }
+            self.logger.error(f"モデル学習中にエラーが発生しました: {str(e)}")
+            raise
     
     def run_evolution(
         self,
@@ -277,7 +304,7 @@ class FXLearningAgent:
             if population_size is None:
                 population_size = self.config.learning.initial_population
             
-            logger.info(f"進化的学習の開始: {currency_pair}, {model_type}, "
+            self.logger.info(f"進化的学習の開始: {currency_pair}, {model_type}, "
                        f"世代数={generations}, 集団サイズ={population_size}")
             
             # データの取得
@@ -285,7 +312,7 @@ class FXLearningAgent:
             val_data = self.fetch_data(currency_pair, "1h", days=10)
             
             if train_data is None or val_data is None:
-                logger.error("学習データが取得できませんでした")
+                self.logger.error("学習データが取得できませんでした")
                 return
             
             # ハイパーパラメータ探索空間の定義
@@ -342,7 +369,7 @@ class FXLearningAgent:
                 ]
                 
             else:
-                logger.error(f"サポートされていないモデルタイプ: {model_type}")
+                self.logger.error(f"サポートされていないモデルタイプ: {model_type}")
                 return
             
             # 初期集団の生成
@@ -355,21 +382,21 @@ class FXLearningAgent:
             
             # 世代ループ
             for generation in range(generations):
-                logger.info(f"世代 {generation+1}/{generations} の学習開始")
+                self.logger.info(f"世代 {generation+1}/{generations} の学習開始")
                 
                 # 各モデルの学習と評価（並列処理）
                 train_results = []
                 
-                if parallel and self.n_workers > 1:
+                if parallel and self.num_workers > 1:
                     # 並列処理
-                    with ProcessPoolExecutor(max_workers=self.n_workers) as executor:
+                    with ProcessPoolExecutor(max_workers=self.num_workers) as executor:
                         futures = []
                         for model_config in population:
                             future = executor.submit(
-                                self.train_model,
-                                model_config,
-                                train_data,
-                                val_data
+                                self.train,
+                                currency_pair,
+                                model_type,
+                                **model_config
                             )
                             futures.append(future)
                         
@@ -379,7 +406,7 @@ class FXLearningAgent:
                 else:
                     # 順次処理
                     for model_config in population:
-                        result = self.train_model(model_config, train_data, val_data)
+                        result = self.train(currency_pair, model_type, **model_config)
                         train_results.append(result)
                 
                 # パフォーマンス情報の抽出
@@ -417,12 +444,12 @@ class FXLearningAgent:
                     # 世代の更新
                     population = next_population
                 
-                logger.info(f"世代 {generation+1}/{generations} の学習完了")
+                self.logger.info(f"世代 {generation+1}/{generations} の学習完了")
             
-            logger.info(f"進化的学習完了: {generations}世代, {len(population)}モデル")
+            self.logger.info(f"進化的学習完了: {generations}世代, {len(population)}モデル")
             
         except Exception as e:
-            logger.error(f"進化的学習エラー: {str(e)}", exc_info=True)
+            self.logger.error(f"進化的学習エラー: {str(e)}", exc_info=True)
     
     def run_backtest(self, model_id: int, test_data: Any = None):
         """バックテストの実行
@@ -432,78 +459,85 @@ class FXLearningAgent:
             test_data: テストデータ（指定がなければ新たに取得）
         """
         # TODO: バックテストの実装
-        logger.warning("バックテスト機能は未実装です")
+        self.logger.warning("バックテスト機能は未実装です")
     
     def shutdown(self):
         """エージェントのシャットダウン"""
-        logger.info("FX学習エージェントをシャットダウンしています...")
+        self.logger.info("FX学習エージェントをシャットダウンしています...")
         self.shutdown_requested = True
         
         # データベース接続のクローズ
         if hasattr(self, 'db') and self.db:
             self.db.dispose()
         
-        logger.info("FX学習エージェントをシャットダウンしました")
+        self.logger.info("FX学習エージェントをシャットダウンしました")
 
-    def evaluate_model(self, model_id: int, test_data: Any) -> Dict[str, Any]:
+    def evaluate(self, model_id: int) -> Dict[str, float]:
         """モデルの評価を実行
         
         Args:
-            model_id: モデルID
-            test_data: テストデータ
+            model_id: 評価対象のモデルID
             
         Returns:
-            評価結果
+            評価指標の辞書
         """
-        try:
-            # モデルの読み込み
-            model = self._load_model(model_id)
-            if model is None:
-                raise ValueError(f"モデルが見つかりません: ID={model_id}")
-            
-            # 評価の実行
-            evaluation = model.evaluate(test_data, save_to_db=True)
-            
-            return evaluation
-            
-        except Exception as e:
-            logger.error(f"モデル評価エラー: {str(e)}", exc_info=True)
-            return {"error": str(e)}
-    
-    def _load_model(self, model_id: int) -> Optional[Any]:
-        """モデルをデータベースから読み込む
+        logger.info(f"モデル（ID: {model_id}）の評価を開始")
         
-        Args:
-            model_id: モデルID
-            
+        # テストデータの取得
+        test_data, market_indices = self._get_test_data()
+        
+        # モデルのロード
+        self.model.load_model(model_id)
+        
+        # 予測の実行
+        predictions, timestamps = self.model.predict(test_data, market_indices=market_indices)
+        
+        # 実際の値の取得
+        actual = test_data["close"].values.reshape(-1, 1)
+        
+        # 評価指標の計算
+        mse = mean_squared_error(actual, predictions)
+        rmse = np.sqrt(mse)
+        mae = mean_absolute_error(actual, predictions)
+        
+        metrics = {
+            "mse": mse,
+            "rmse": rmse,
+            "mae": mae
+        }
+        
+        logger.info(f"評価結果: {metrics}")
+        return metrics
+
+    def _get_test_data(self):
+        """テストデータを取得します。
+
         Returns:
-            読み込んだモデル
+            Tuple[pd.DataFrame, pd.DataFrame]: 特徴量とターゲットのデータフレーム
         """
-        try:
-            session = self.db.get_session()
-            model_record = session.query(DbModel).filter_by(id=model_id).first()
-            
-            if model_record is None:
-                return None
-            
-            # モデルタイプに応じて適切なモデルクラスをインスタンス化
-            if model_record.model_type.lower() == "lstm":
-                model = TimeSeriesModel()
-            elif model_record.model_type.lower() == "sentiment":
-                model = SentimentModel()
-            else:
-                raise ValueError(f"サポートされていないモデルタイプ: {model_record.model_type}")
-            
-            # モデルの読み込み
-            model.load_model(model_id)
-            
-            return model
-            
-        except Exception as e:
-            logger.error(f"モデル読み込みエラー: {str(e)}", exc_info=True)
-            return None
-        finally:
-            session.close()
+        self.logger.info("テストデータを取得しています...")
+        
+        # 為替データを取得
+        end_date = datetime.utcnow()
+        start_date = end_date - timedelta(days=30)  # 過去30日分のデータを使用
+        
+        forex_data = self.data_fetcher.fetch_historical_rates(
+            symbol=self.currency_pair,
+            timeframe="1d",
+            start_date=start_date,
+            end_date=end_date
+        )
+        
+        # 市場指数データを取得
+        market_indices = self.data_fetcher.fetch_market_indices(
+            indices=["VIX", "S&P500", "日経平均", "DXY", "金", "原油"],
+            start_date=start_date,
+            end_date=end_date
+        )
+        
+        self.logger.info(f"テストデータを取得しました: {len(forex_data)}件")
+        
+        return forex_data, market_indices
 
 
 def main():
@@ -622,26 +656,23 @@ def train_command(args):
         
         # モデルの学習
         logger.info(f"{model_type}モデルの学習を開始します...")
-        result = agent.train_model(
-            model_type=model_type,
-            train_data=train_data,
-            val_data=val_data
+        result = agent.train(
+            currency_pair=args.pair,
+            model_type=model_type
         )
         
-        if result["status"] == "success":
-            logger.info(f"モデル学習が完了しました。モデルID: {result['model_id']}")
-            logger.info(f"学習結果: {result['results']}")
-            
-            # モデルの評価
-            logger.info("モデルの評価を実行しています...")
-            evaluation = agent.evaluate_model(
-                model_id=result['model_id'],
-                test_data=val_data
-            )
-            logger.info(f"評価結果: {evaluation}")
-            
+        if result:
+            if "error" in result:
+                logger.error(f"モデル学習に失敗しました: {result['error']}")
+            else:
+                logger.info(f"モデル学習が完了しました。モデルID: {result.get('model_saved')}")
+                logger.info(f"学習結果: {result}")
+                
+                # モデルの評価
+                logger.info("モデルの評価を実行しています...")
+                agent.evaluate(result.get('model_saved'))
         else:
-            logger.error(f"モデル学習に失敗しました: {result['error']}")
+            logger.error("モデル学習に失敗しました: 結果が返されませんでした")
             
     except Exception as e:
         logger.error(f"コマンド実行エラー: {str(e)}", exc_info=True)
