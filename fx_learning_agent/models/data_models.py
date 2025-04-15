@@ -2,7 +2,7 @@ import datetime
 import json
 import uuid
 from typing import Optional, List, Dict, Any, Union
-from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey, Text, JSON
+from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey, Text, JSON, LargeBinary
 from sqlalchemy.orm import relationship
 
 from utils.database import Base
@@ -61,6 +61,8 @@ class Model(Base):
     parent_uuid = Column(String(36), nullable=True)  # 親モデルUUID
     hyperparameters = Column(JSON, nullable=False)  # ハイパーパラメータ
     model_path = Column(String(500), nullable=True)  # モデルファイルのパス
+    model_data = Column(LargeBinary, nullable=True)  # モデルデータ（バイナリ）
+    scaler_data = Column(LargeBinary, nullable=True)  # スケーラーデータ（バイナリ）
     features = Column(JSON, nullable=True)  # 使用する特徴量
     training_start = Column(DateTime, nullable=True)
     training_end = Column(DateTime, nullable=True)

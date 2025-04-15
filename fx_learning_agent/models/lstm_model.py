@@ -2,35 +2,14 @@ import os
 import numpy as np
 import pandas as pd
 import uuid
-
-# TensorFlowをモックに置き換え
-class MockTensorFlow:
-    class keras:
-        class models:
-            Sequential = object
-            load_model = lambda x: None
-        
-        class layers:
-            LSTM = object
-            Dense = object
-            Dropout = object
-            BatchNormalization = object
-            
-        class callbacks:
-            EarlyStopping = object
-            ModelCheckpoint = object
-            ReduceLROnPlateau = object
-            
-        class optimizers:
-            Adam = lambda learning_rate=0.001: None
-
-# モックオブジェクトをtfとして使用
-tf = MockTensorFlow()
-
-import datetime
+from datetime import datetime
 from typing import Dict, List, Optional, Any, Union, Tuple
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.ensemble import RandomForestRegressor
 import joblib
+import io
+import torch
+import json
 
 from utils.logger import get_logger
 from config.config import get_config
@@ -39,10 +18,10 @@ from utils.database import get_db
 
 logger = get_logger(__name__)
 
-class LSTMModel:
-    """LSTM（Long Short-Term Memory）モデル
+class TimeSeriesModel:
+    """時系列予測モデル
     
-    時系列データ予測のためのディープラーニングモデルを実装します。
+    RandomForestを使用して時系列データの予測を行います。
     """
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
@@ -56,20 +35,18 @@ class LSTMModel:
         
         # モデル設定
         self.config = config or {}
-        self.model_type = self.config.get("model_type", "LSTM")
+        self.model_type = self.config.get("model_type", "RandomForest")
         self.currency_pair = self.config.get("currency_pair", "USD/JPY")
         
         # ハイパーパラメータ
         self.hyperparameters = self.config.get("hyperparameters", {})
         
         # デフォルトのハイパーパラメータ
-        self.sequence_length = self.hyperparameters.get("sequence_length", 60)  # 系列長
-        self.n_layers = self.hyperparameters.get("n_layers", 2)  # LSTMレイヤー数
-        self.units = self.hyperparameters.get("units", 64)  # LSTM隠れ層のユニット数
-        self.dropout_rate = self.hyperparameters.get("dropout_rate", 0.2)  # ドロップアウト率
-        self.learning_rate = self.hyperparameters.get("learning_rate", 0.001)  # 学習率
-        self.batch_size = self.hyperparameters.get("batch_size", 32)  # バッチサイズ
-        self.epochs = self.hyperparameters.get("epochs", 100)  # エポック数
+        self.sequence_length = self.hyperparameters.get("sequence_length", 10)
+        self.n_estimators = self.hyperparameters.get("n_estimators", 100)
+        self.max_depth = self.hyperparameters.get("max_depth", None)
+        self.min_samples_split = self.hyperparameters.get("min_samples_split", 2)
+        self.min_samples_leaf = self.hyperparameters.get("min_samples_leaf", 1)
         
         # 特徴量
         self.features = self.config.get("features", None)
@@ -83,174 +60,65 @@ class LSTMModel:
         self.db_model_id = None
         self.model_uuid = self.config.get("uuid")
     
-    def _preprocess_data(
-        self,
-        df: pd.DataFrame,
-        target_col: str = "close"
-    ) -> Tuple[np.ndarray, np.ndarray, List[datetime.datetime]]:
-        """データの前処理
+    def _preprocess_data(self, data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+        """データの前処理を行う
         
         Args:
-            df: 為替レートのデータフレーム
-            target_col: 予測対象の列名
+            data: 生データ
             
         Returns:
-            X: 入力データ（3次元配列: [サンプル数, 時間ステップ, 特徴量数]）
-            y: 正解データ（2次元配列: [サンプル数, 1]）
-            timestamps: タイムスタンプのリスト
+            前処理済みの特徴量とターゲット
         """
-        # 前処理用のデータフレーム
-        df_copy = df.copy()
-        
-        # 特徴量のリスト
+        # 特徴量とターゲットを分離
         if self.features is None:
-            # デフォルトでOHLCを使用
-            feature_cols = ["open", "high", "low", "close"]
+            # デフォルトの特徴量を使用
+            features = ['close', 'high', 'low', 'open', 'volume']
         else:
-            feature_cols = self.features
+            features = self.features
             
-        # 利用可能な特徴量だけを使用
-        available_features = [col for col in feature_cols if col in df_copy.columns]
-        if not available_features:
-            logger.error("有効な特徴量がありません")
-            raise ValueError("有効な特徴量がありません")
-        
-        # テクニカル指標の計算
-        self._add_technical_indicators(df_copy)
-        
-        # 欠損値の処理
-        df_copy = df_copy.dropna()
+        X = data[features].values
+        y = data['close'].values
         
         # スケーリング
         if self.scaler_X is None:
-            self.scaler_X = MinMaxScaler(feature_range=(0, 1))
-            self.scaler_X.fit(df_copy[available_features])
-        
+            self.scaler_X = MinMaxScaler()
+            X = self.scaler_X.fit_transform(X)
+        else:
+            X = self.scaler_X.transform(X)
+            
         if self.scaler_y is None:
-            self.scaler_y = MinMaxScaler(feature_range=(0, 1))
-            self.scaler_y.fit(df_copy[[target_col]])
+            self.scaler_y = MinMaxScaler()
+            y = self.scaler_y.fit_transform(y.reshape(-1, 1))
+        else:
+            y = self.scaler_y.transform(y.reshape(-1, 1))
+            
+        # シーケンスデータの作成
+        X_seq = []
+        y_seq = []
         
-        X_scaled = self.scaler_X.transform(df_copy[available_features])
-        y_scaled = self.scaler_y.transform(df_copy[[target_col]])
-        
-        # 時系列データ変換
-        X, y, timestamps = [], [], []
-        for i in range(len(df_copy) - self.sequence_length):
-            X.append(X_scaled[i:i+self.sequence_length])
-            y.append(y_scaled[i+self.sequence_length])
-            timestamps.append(df_copy.index[i+self.sequence_length])
-        
-        return np.array(X), np.array(y), timestamps
+        for i in range(len(X) - self.sequence_length):
+            X_seq.append(X[i:i + self.sequence_length].flatten())
+            y_seq.append(y[i + self.sequence_length])
+            
+        return np.array(X_seq), np.array(y_seq)
     
-    def _add_technical_indicators(self, df: pd.DataFrame) -> None:
-        """テクニカル指標を追加
-        
-        Args:
-            df: 為替レートのデータフレーム
-        """
-        if self.features is None:
-            return
-        
-        # SMA (Simple Moving Average)
-        if "sma_5" in self.features:
-            df["sma_5"] = df["close"].rolling(5).mean()
-        if "sma_10" in self.features:
-            df["sma_10"] = df["close"].rolling(10).mean()
-        if "sma_20" in self.features:
-            df["sma_20"] = df["close"].rolling(20).mean()
-        
-        # EMA (Exponential Moving Average)
-        if "ema_5" in self.features:
-            df["ema_5"] = df["close"].ewm(span=5).mean()
-        if "ema_10" in self.features:
-            df["ema_10"] = df["close"].ewm(span=10).mean()
-        if "ema_20" in self.features:
-            df["ema_20"] = df["close"].ewm(span=20).mean()
-        
-        # ボリンジャーバンド
-        if any(f in self.features for f in ["bb_upper", "bb_middle", "bb_lower"]):
-            window = 20
-            std = df["close"].rolling(window).std()
-            df["bb_middle"] = df["close"].rolling(window).mean()
-            df["bb_upper"] = df["bb_middle"] + 2 * std
-            df["bb_lower"] = df["bb_middle"] - 2 * std
-        
-        # RSI (Relative Strength Index)
-        if "rsi" in self.features:
-            delta = df["close"].diff()
-            gain = delta.where(delta > 0, 0)
-            loss = -delta.where(delta < 0, 0)
-            avg_gain = gain.rolling(14).mean()
-            avg_loss = loss.rolling(14).mean()
-            rs = avg_gain / avg_loss
-            df["rsi"] = 100 - (100 / (1 + rs))
-        
-        # MACD (Moving Average Convergence Divergence)
-        if any(f in self.features for f in ["macd", "macd_signal", "macd_hist"]):
-            ema_12 = df["close"].ewm(span=12).mean()
-            ema_26 = df["close"].ewm(span=26).mean()
-            df["macd"] = ema_12 - ema_26
-            df["macd_signal"] = df["macd"].ewm(span=9).mean()
-            df["macd_hist"] = df["macd"] - df["macd_signal"]
-        
-        # 変化率
-        if "pct_change" in self.features:
-            df["pct_change"] = df["close"].pct_change()
-        
-        # ATR (Average True Range)
-        if "atr" in self.features:
-            high_low = df["high"] - df["low"]
-            high_close = (df["high"] - df["close"].shift()).abs()
-            low_close = (df["low"] - df["close"].shift()).abs()
-            ranges = pd.concat([high_low, high_close, low_close], axis=1)
-            true_range = ranges.max(axis=1)
-            df["atr"] = true_range.rolling(14).mean()
-    
-    def _build_model(self, input_shape: Tuple[int, int]):
-        """モデルの構築
-        
-        Args:
-            input_shape: 入力データの形状 (sequence_length, features)
-        """
-        model = tf.keras.models.Sequential()
-        
-        # 入力層
-        model.add(tf.keras.layers.LSTM(
-            units=self.units,
-            return_sequences=self.n_layers > 1,
-            input_shape=input_shape
-        ))
-        model.add(tf.keras.layers.BatchNormalization())
-        model.add(tf.keras.layers.Dropout(self.dropout_rate))
-        
-        # 中間層
-        for i in range(1, self.n_layers):
-            is_last_layer = i == self.n_layers - 1
-            model.add(tf.keras.layers.LSTM(
-                units=self.units,
-                return_sequences=not is_last_layer
-            ))
-            model.add(tf.keras.layers.BatchNormalization())
-            model.add(tf.keras.layers.Dropout(self.dropout_rate))
-        
-        # 出力層
-        model.add(tf.keras.layers.Dense(1))
-        
-        # コンパイル
-        model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=self.learning_rate),
-            loss="mean_squared_error"
+    def _build_model(self):
+        """モデルの構築"""
+        self.model = RandomForestRegressor(
+            n_estimators=self.n_estimators,
+            max_depth=self.max_depth,
+            min_samples_split=self.min_samples_split,
+            min_samples_leaf=self.min_samples_leaf,
+            random_state=42
         )
         
-        self.model = model
-        logger.info(f"LSTMモデルを構築しました: レイヤー数={self.n_layers}, ユニット数={self.units}")
+        logger.info(f"RandomForestモデルを構築しました: n_estimators={self.n_estimators}")
     
     def train(
         self,
         df_train: pd.DataFrame,
         df_val: Optional[pd.DataFrame] = None,
         target_col: str = "close",
-        early_stopping: bool = True,
         save_model: bool = True
     ) -> Dict[str, Any]:
         """モデルの学習
@@ -259,91 +127,92 @@ class LSTMModel:
             df_train: 学習用データ
             df_val: 検証用データ
             target_col: 予測対象の列名
-            early_stopping: 早期終了を使用するかどうか
             save_model: 学習後にモデルを保存するかどうか
             
         Returns:
             学習結果の情報
         """
         # 学習開始時間
-        training_start = datetime.datetime.utcnow()
+        training_start = datetime.now()
         
         # データの前処理
-        X_train, y_train, _ = self._preprocess_data(df_train, target_col)
+        X_train, y_train = self._preprocess_data(df_train)
         
         # 検証データがあれば前処理
-        validation_data = None
         if df_val is not None:
-            X_val, y_val, _ = self._preprocess_data(df_val, target_col)
-            validation_data = (X_val, y_val)
+            X_val, y_val = self._preprocess_data(df_val)
         
         # モデルの構築
         if self.model is None:
-            self._build_model(input_shape=(X_train.shape[1], X_train.shape[2]))
-        
-        # コールバックの設定
-        callbacks = []
-        
-        if early_stopping:
-            # 早期終了
-            callbacks.append(tf.keras.callbacks.EarlyStopping(
-                monitor="val_loss" if validation_data else "loss",
-                patience=10,
-                restore_best_weights=True
-            ))
-        
-        # 学習率スケジューラ
-        callbacks.append(tf.keras.callbacks.ReduceLROnPlateau(
-            monitor="val_loss" if validation_data else "loss",
-            factor=0.5,
-            patience=5,
-            min_lr=1e-5
-        ))
-        
-        # モデルチェックポイント
-        if save_model:
-            os.makedirs(self.app_config.save_models_path, exist_ok=True)
-            model_save_path = os.path.join(
-                self.app_config.save_models_path,
-                f"lstm_{self.currency_pair}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.h5"
-            )
-            
-            callbacks.append(tf.keras.callbacks.ModelCheckpoint(
-                model_save_path,
-                save_best_only=True,
-                monitor="val_loss" if validation_data else "loss"
-            ))
+            self._build_model()
         
         # 学習の実行
-        history = self.model.fit(
-            X_train, y_train,
-            epochs=self.epochs,
-            batch_size=self.batch_size,
-            validation_data=validation_data,
-            callbacks=callbacks,
-            verbose=1
-        )
+        self.model.fit(X_train, y_train.ravel())
         
         # 学習終了時間
-        training_end = datetime.datetime.utcnow()
+        training_end = datetime.now()
         training_duration = (training_end - training_start).total_seconds()
         
         # 学習結果
         train_metrics = {
-            "loss": history.history["loss"][-1],
-            "val_loss": history.history["val_loss"][-1] if validation_data else None,
             "training_start": training_start,
             "training_end": training_end,
-            "training_duration": training_duration,
-            "model_path": model_save_path if save_model else None
+            "training_duration": training_duration
         }
         
-        logger.info(f"モデル学習完了: 損失={train_metrics['loss']:.6f}, "
-                   f"検証損失={train_metrics['val_loss']:.6f if train_metrics['val_loss'] else 'N/A'}")
+        # 検証データがある場合は評価を実施
+        if df_val is not None:
+            val_pred = self.model.predict(X_val)
+            val_pred = val_pred.reshape(-1, 1)
+            val_pred = self.scaler_y.inverse_transform(val_pred)
+            y_val_orig = self.scaler_y.inverse_transform(y_val)
+            
+            # 評価指標の計算
+            mse = np.mean((y_val_orig - val_pred) ** 2)
+            rmse = np.sqrt(mse)
+            mae = np.mean(np.abs(y_val_orig - val_pred))
+            
+            train_metrics.update({
+                "val_mse": mse,
+                "val_rmse": rmse,
+                "val_mae": mae
+            })
         
-        # データベースに保存
+        # データベースにモデルを保存
         if save_model:
-            self._save_model_metadata(train_metrics)
+            try:
+                session = self.db.get_session()
+                
+                # モデルの保存
+                db_model = DbModel(
+                    uuid=self.model_uuid or str(uuid.uuid4()),
+                    name=f"LSTM_{self.currency_pair}_{datetime.now().strftime('%Y%m%d_%H%M')}",
+                    model_type=self.model_type,
+                    currency_pair=self.currency_pair,
+                    generation=0,
+                    hyperparameters=self.hyperparameters,
+                    features=self.features
+                )
+                
+                session.add(db_model)
+                session.commit()
+                
+                # モデルIDを保存
+                self.db_model_id = db_model.id
+                
+                # モデルのメタデータを更新
+                self._save_model_metadata(self.db_model_id, training_start, training_end)
+                train_metrics["model_saved"] = True
+                
+                logger.info(f"モデルをデータベースに保存しました: ID={db_model.id}")
+                
+            except Exception as e:
+                logger.error(f"モデルの保存に失敗しました: {str(e)}")
+                session.rollback()
+            finally:
+                session.close()
+        
+        logger.info(f"モデル学習完了: RMSE={train_metrics.get('val_rmse', 'N/A')}")
         
         return train_metrics
     
@@ -351,7 +220,7 @@ class LSTMModel:
         self,
         df: pd.DataFrame,
         target_col: str = "close"
-    ) -> Tuple[np.ndarray, List[datetime.datetime]]:
+    ) -> Tuple[np.ndarray, List[datetime]]:
         """予測の実行
         
         Args:
@@ -367,15 +236,16 @@ class LSTMModel:
             raise ValueError("モデルがロードされていません")
         
         # データの前処理
-        X, _, timestamps = self._preprocess_data(df, target_col)
+        X, _ = self._preprocess_data(df)
         
         # 予測の実行
         y_pred_scaled = self.model.predict(X)
+        y_pred_scaled = y_pred_scaled.reshape(-1, 1)
         
         # スケール逆変換
         y_pred = self.scaler_y.inverse_transform(y_pred_scaled)
         
-        return y_pred, timestamps
+        return y_pred, df.index.tolist()
     
     def evaluate(
         self,
@@ -398,10 +268,11 @@ class LSTMModel:
             raise ValueError("モデルがロードされていません")
         
         # データの前処理
-        X, y_true_scaled, timestamps = self._preprocess_data(df, target_col)
+        X, y_true_scaled = self._preprocess_data(df)
         
         # 予測の実行
         y_pred_scaled = self.model.predict(X)
+        y_pred_scaled = y_pred_scaled.reshape(-1, 1)
         
         # スケール逆変換
         y_true = self.scaler_y.inverse_transform(y_true_scaled)
@@ -424,7 +295,7 @@ class LSTMModel:
             "rmse": rmse,
             "mae": mae,
             "direction_accuracy": direction_accuracy,
-            "timestamp": datetime.datetime.utcnow()
+            "timestamp": datetime.now()
         }
         
         logger.info(f"モデル評価: RMSE={rmse:.6f}, 方向予測精度={direction_accuracy:.2%}")
@@ -452,12 +323,12 @@ class LSTMModel:
             os.makedirs(self.app_config.save_models_path, exist_ok=True)
             path = os.path.join(
                 self.app_config.save_models_path,
-                f"lstm_{self.currency_pair}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                f"rf_{self.currency_pair}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
             )
         
         # モデル本体の保存
-        model_path = f"{path}.h5"
-        self.model.save(model_path)
+        model_path = f"{path}.joblib"
+        joblib.dump(self.model, model_path)
         
         # スケーラーの保存
         scaler_path = f"{path}_scalers.joblib"
@@ -490,11 +361,11 @@ class LSTMModel:
             scaler_path: スケーラーファイルのパス
         """
         # モデル本体の読み込み
-        self.model = tf.keras.models.load_model(model_path)
+        self.model = joblib.load(model_path)
         
         # 設定の読み込み
         if config_path is None:
-            config_path = model_path.replace(".h5", "_config.joblib")
+            config_path = model_path.replace(".joblib", "_config.joblib")
         
         if os.path.exists(config_path):
             loaded_config = joblib.load(config_path)
@@ -506,7 +377,7 @@ class LSTMModel:
         
         # スケーラーの読み込み
         if scaler_path is None:
-            scaler_path = model_path.replace(".h5", "_scalers.joblib")
+            scaler_path = model_path.replace(".joblib", "_scalers.joblib")
         
         if os.path.exists(scaler_path):
             scalers = joblib.load(scaler_path)
@@ -515,58 +386,61 @@ class LSTMModel:
         
         logger.info(f"モデルを読み込みました: {model_path}")
     
-    def _save_model_metadata(self, train_metrics: Dict[str, Any]) -> None:
-        """モデルのメタデータをデータベースに保存
-        
-        Args:
-            train_metrics: 学習結果
-        """
+    def _save_model_metadata(self, model_id: int, training_start: datetime, training_end: datetime) -> None:
+        """モデルのメタデータをデータベースに保存"""
         try:
-            session = self.db.get_session()
+            # モデルとスケーラーをバイナリデータに変換
+            model_bytes = io.BytesIO()
+            joblib.dump(self.model, model_bytes)
+            model_bytes.seek(0)
             
-            # モデルの保存
-            db_model = DbModel(
-                uuid=self.model_uuid or str(uuid.uuid4()),
-                name=self.config.get("name", f"LSTM_{self.currency_pair}_{datetime.datetime.now().strftime('%Y%m%d_%H%M')}"),
-                model_type=self.model_type,
-                currency_pair=self.currency_pair,
-                generation=self.config.get("generation", 0),
-                hyperparameters=self.hyperparameters,
-                model_path=train_metrics.get("model_path"),
-                features=self.features,
-                training_start=train_metrics.get("training_start"),
-                training_end=train_metrics.get("training_end"),
-                training_duration=train_metrics.get("training_duration")
-            )
+            scaler_bytes = io.BytesIO()
+            joblib.dump(self.scaler_X, scaler_bytes)
+            scaler_bytes.seek(0)
             
-            # 親モデルがある場合は設定
-            parent_uuid = self.config.get("parent_uuid")
-            if parent_uuid:
-                if isinstance(parent_uuid, list):
-                    # 複数の親がある場合は最初の親を設定
-                    db_model.parent_uuid = parent_uuid[0]
-                else:
-                    db_model.parent_uuid = parent_uuid
-            
-            session.add(db_model)
-            session.commit()
-            
-            # モデルIDを保存
-            self.db_model_id = db_model.id
-            
-            logger.info(f"モデルメタデータをデータベースに保存しました: ID={db_model.id}")
-            
+            # モデルメタデータを更新
+            model = self.db.get_session().query(DbModel).filter_by(id=model_id).first()
+            if model:
+                model.model_data = model_bytes.getvalue()
+                model.scaler_data = scaler_bytes.getvalue()
+                model.training_start = training_start
+                model.training_end = training_end
+                model.training_duration = (training_end - training_start).total_seconds()
+                model.updated_at = datetime.now()
+                self.db.get_session().commit()
+                logger.info(f"モデルメタデータを更新しました: {model.name}")
+            else:
+                logger.error(f"モデルが見つかりません: ID={model_id}")
         except Exception as e:
-            logger.error(f"モデルメタデータの保存エラー: {str(e)}", exc_info=True)
-            session.rollback()
-        finally:
-            session.close()
+            logger.error(f"モデルメタデータの保存に失敗しました: {str(e)}")
+            self.db.get_session().rollback()
+            raise
+
+    def load_model(self, model_id: int) -> None:
+        """モデルをデータベースから読み込む"""
+        try:
+            model = self.db.get_session().query(DbModel).filter_by(id=model_id).first()
+            if model and model.model_data and model.scaler_data:
+                # モデルを読み込む
+                model_bytes = io.BytesIO(model.model_data)
+                self.model = joblib.load(model_bytes)
+                
+                # スケーラーを読み込む
+                scaler_bytes = io.BytesIO(model.scaler_data)
+                self.scaler_X = joblib.load(scaler_bytes)
+                
+                logger.info(f"モデルを読み込みました: {model.name}")
+            else:
+                logger.error(f"モデルデータが見つかりません: ID={model_id}")
+        except Exception as e:
+            logger.error(f"モデルの読み込みに失敗しました: {str(e)}")
+            raise
     
     def _save_evaluation_results(
         self,
         evaluation: Dict[str, Any],
-        start_date: datetime.datetime,
-        end_date: datetime.datetime
+        start_date: datetime,
+        end_date: datetime
     ) -> None:
         """評価結果をデータベースに保存
         
@@ -584,16 +458,26 @@ class LSTMModel:
                 evaluation_type="validation",
                 start_date=start_date,
                 end_date=end_date,
-                
-                # 精度指標
-                accuracy=evaluation.get("direction_accuracy", 0) * 100,  # パーセンテージに変換
-                
-                # 詳細情報
-                details={
-                    "mse": evaluation.get("mse"),
-                    "rmse": evaluation.get("rmse"),
-                    "mae": evaluation.get("mae")
-                }
+                profit=float(evaluation.get('profit', 0.0)),
+                profit_percent=float(evaluation.get('profit_percent', 0.0)),
+                win_count=int(evaluation.get('win_count', 0)),
+                loss_count=int(evaluation.get('loss_count', 0)),
+                win_rate=float(evaluation.get('win_rate', 0.0)),
+                avg_win=float(evaluation.get('avg_win', 0.0)) if evaluation.get('avg_win') is not None else None,
+                avg_loss=float(evaluation.get('avg_loss', 0.0)) if evaluation.get('avg_loss') is not None else None,
+                max_drawdown=float(evaluation.get('max_drawdown', 0.0)) if evaluation.get('max_drawdown') is not None else None,
+                sharpe_ratio=float(evaluation.get('sharpe_ratio', 0.0)) if evaluation.get('sharpe_ratio') is not None else None,
+                sortino_ratio=float(evaluation.get('sortino_ratio', 0.0)) if evaluation.get('sortino_ratio') is not None else None,
+                accuracy=float(evaluation.get('direction_accuracy', 0.0)) if evaluation.get('direction_accuracy') is not None else None,
+                precision=float(evaluation.get('precision', 0.0)) if evaluation.get('precision') is not None else None,
+                recall=float(evaluation.get('recall', 0.0)) if evaluation.get('recall') is not None else None,
+                f1_score=float(evaluation.get('f1_score', 0.0)) if evaluation.get('f1_score') is not None else None,
+                fitness_score=float(evaluation.get('fitness_score', 0.0)),
+                details=json.dumps({
+                    'mse': float(evaluation.get('mse', 0.0)),
+                    'rmse': float(evaluation.get('rmse', 0.0)),
+                    'mae': float(evaluation.get('mae', 0.0))
+                })
             )
             
             session.add(performance)
@@ -611,7 +495,7 @@ class LSTMModel:
         self,
         predictions: np.ndarray,
         actual_values: np.ndarray,
-        timestamps: List[datetime.datetime]
+        timestamps: List[datetime]
     ) -> None:
         """予測結果をデータベースに保存
         
@@ -626,7 +510,7 @@ class LSTMModel:
         
         try:
             session = self.db.get_session()
-            prediction_time = datetime.datetime.utcnow()
+            prediction_time = datetime.now()
             
             for i, (pred, actual, ts) in enumerate(zip(predictions, actual_values, timestamps)):
                 # 予測方向（上昇/下降）
@@ -665,7 +549,7 @@ class LSTMModel:
                     predicted_direction=predicted_direction,
                     predicted_change=pred_change_pct,
                     predicted_price=float(pred[0]),
-                    confidence=0.5,  # LSTMではデフォルトで0.5とする
+                    confidence=0.5,  # RandomForestではデフォルトで0.5とする
                     
                     # 実際の値
                     actual_direction=actual_direction,
