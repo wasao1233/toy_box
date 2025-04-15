@@ -84,8 +84,12 @@ class TimeSeriesModel:
         # 市場指数データの追加（存在する場合）
         if market_indices is not None:
             for index_name, index_data in market_indices.items():
-                merged_data = pd.merge(data, index_data, left_index=True, right_index=True, how='left')
-                merged_data = merged_data[f'close_{index_name}'].fillna(method='ffill').fillna(method='bfill')
+                # インデックスデータを日付でマージ
+                merged_data = pd.merge(data, index_data[['close']], 
+                                     left_index=True, right_index=True, 
+                                     how='left', suffixes=('', f'_{index_name}'))
+                # NaNを前方補完と後方補完で埋める
+                merged_data = merged_data[f'close_{index_name}'].ffill().bfill()
                 features = np.column_stack((features, merged_data.values))
 
         # スケーリング
@@ -105,53 +109,14 @@ class TimeSeriesModel:
 
         # シーケンスデータの作成
         X, y = [], []
-        # 特徴量とターゲットを準備
-        features = []
-        target = data['close'].values
-
-        # 基本的な特徴量を追加
-        for col in ['open', 'high', 'low', 'close', 'volume']:
-            if col in data.columns:
-                features.append(data[col].values)
-
-        # 市場指数データを追加
-        if market_indices is not None:
-            for index_name, index_data in market_indices.items():
-                if 'close' in index_data.columns:
-                    # インデックスデータを日付でマージ
-                    merged_data = pd.merge(data, index_data[['close']], 
-                                         left_index=True, right_index=True, 
-                                         how='left', suffixes=('', f'_{index_name}'))
-                    # NaNを前方補完と後方補完で埋める
-                    merged_data = merged_data[f'close_{index_name}'].fillna(method='ffill').fillna(method='bfill')
-                    features.append(merged_data.values)
-
-        # 特徴量を結合
-        X = np.column_stack(features)
-
-        # スケーリング
-        if self.scaler is None:
-            self.scaler = StandardScaler()
-            X = self.scaler.fit_transform(X)
-        else:
-            X = self.scaler.transform(X)
-
-        # シーケンスデータの作成
-        X_seq = []
-        y_seq = []
+        for i in range(len(features_scaled) - self.sequence_length):
+            X.append(features_scaled[i:i + self.sequence_length])
+            y.append(target_scaled[i + self.sequence_length])
         
-        for i in range(len(X) - self.sequence_length):
-            X_seq.append(X[i:i + self.sequence_length])
-            y_seq.append(target[i + self.sequence_length])
-        
-        X_seq = np.array(X_seq)
-        y_seq = np.array(y_seq)
+        X = np.array(X)
+        y = np.array(y)
 
-        # シーケンスデータを2次元に変換
-        n_samples = X_seq.shape[0]
-        X_seq = X_seq.reshape(n_samples, -1)
-
-        return X_seq, y_seq
+        return X, y
     
     def _build_model(self, input_shape: Tuple[int, ...]) -> RandomForestRegressor:
         """モデルの構築"""
