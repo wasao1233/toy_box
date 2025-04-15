@@ -119,9 +119,23 @@ class FXLearningAgent:
         try:
             logger.info(f"ニュースデータの取得: {keywords}, {days}日間")
             
+            # デフォルトのキーワードを拡張
+            if not keywords:
+                currency_pairs = [cp.symbol for cp in self.config.currency_pairs]
+                keywords = currency_pairs + [
+                    # 金融政策関連
+                    "FRB", "ECB", "BOJ", "日銀", "利上げ", "利下げ", "金融政策",
+                    # 経済指標
+                    "GDP", "失業率", "インフレ率", "CPI", "PPI",
+                    # 地政学リスク
+                    "トランプ", "関税", "貿易摩擦", "地政学リスク",
+                    # 市場指数
+                    "VIX", "S&P500", "ダウ平均", "日経平均", "TOPIX"
+                ]
+            
             # 日付範囲の設定
-            end_date = datetime.datetime.utcnow()
-            start_date = end_date - datetime.timedelta(days=days)
+            end_date = datetime.utcnow()
+            start_date = end_date - timedelta(days=days)
             
             # ニュースデータの取得
             articles = self.news_fetcher.fetch_news(
@@ -136,6 +150,16 @@ class FXLearningAgent:
                 return None
             
             logger.info(f"{len(articles)}件のニュースデータを取得しました")
+            
+            # 市場指数データの取得
+            market_indices = self.forex_fetcher.fetch_market_indices(
+                timeframe="1d",
+                start_date=start_date,
+                end_date=end_date
+            )
+            
+            if market_indices:
+                logger.info(f"{len(market_indices)}件の市場指数データを取得しました")
             
             # センチメント分析
             if hasattr(self, 'sentiment_model') and self.sentiment_model.model is not None:

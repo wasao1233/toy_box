@@ -54,6 +54,14 @@ class ForexDataFetcher(DataFetcher):
         super().__init__("alpha_vantage")
         self.base_url = self.source_config.base_url
         self.api_key = self.source_config.api_key
+        self.market_indices = {
+            "VIX": "VIX",
+            "S&P500": "SPY",
+            "日経平均": "N225",
+            "DXY": "DXY",
+            "金": "XAU/USD",
+            "原油": "WTI"
+        }
     
     def _generate_demo_data(
         self,
@@ -436,6 +444,54 @@ class ForexDataFetcher(DataFetcher):
             
         except Exception as e:
             logger.error(f"長期的分析エラー ({symbol}): {str(e)}", exc_info=True)
+            return {}
+
+    def fetch_market_indices(
+        self,
+        indices: List[str] = None,
+        timeframe: str = "1d",
+        start_date: Optional[datetime.datetime] = None,
+        end_date: Optional[datetime.datetime] = None
+    ) -> Dict[str, pd.DataFrame]:
+        """市場指数データを取得
+        
+        Args:
+            indices: 取得する指数のリスト（Noneの場合は全て）
+            timeframe: 時間枠
+            start_date: 開始日時
+            end_date: 終了日時
+            
+        Returns:
+            指数ごとのデータフレームの辞書
+        """
+        try:
+            if indices is None:
+                indices = list(self.market_indices.keys())
+            
+            results = {}
+            for index in indices:
+                if index not in self.market_indices:
+                    logger.warning(f"サポートされていない指数: {index}")
+                    continue
+                
+                symbol = self.market_indices[index]
+                df = self.fetch_historical_rates(
+                    symbol=symbol,
+                    timeframe=timeframe,
+                    start_date=start_date,
+                    end_date=end_date
+                )
+                
+                if not df.empty:
+                    results[index] = df
+                    logger.info(f"{index}のデータを取得しました: {len(df)}件")
+                else:
+                    logger.warning(f"{index}のデータが取得できませんでした")
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"市場指数データ取得エラー: {str(e)}", exc_info=True)
             return {}
 
 

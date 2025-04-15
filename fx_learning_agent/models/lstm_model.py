@@ -60,11 +60,12 @@ class TimeSeriesModel:
         self.db_model_id = None
         self.model_uuid = self.config.get("uuid")
     
-    def _preprocess_data(self, data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def _preprocess_data(self, data: pd.DataFrame, market_indices: Optional[Dict[str, pd.DataFrame]] = None) -> Tuple[np.ndarray, np.ndarray]:
         """データの前処理を行う
         
         Args:
             data: 生データ
+            market_indices: 市場指数データの辞書
             
         Returns:
             前処理済みの特徴量とターゲット
@@ -75,7 +76,27 @@ class TimeSeriesModel:
             features = ['close', 'high', 'low', 'open', 'volume']
         else:
             features = self.features
-            
+        
+        # 市場指数データの追加
+        if market_indices is not None:
+            for index_name, index_data in market_indices.items():
+                # 日付でマージ
+                merged_data = pd.merge(
+                    data,
+                    index_data[['close']].rename(columns={'close': f'{index_name}_close'}),
+                    left_index=True,
+                    right_index=True,
+                    how='left'
+                )
+                # 前方補完
+                merged_data = merged_data.fillna(method='ffill')
+                # 後方補完（最初の欠損値）
+                merged_data = merged_data.fillna(method='bfill')
+                
+                # 特徴量に追加
+                features.append(f'{index_name}_close')
+                data = merged_data
+        
         X = data[features].values
         y = data['close'].values
         
